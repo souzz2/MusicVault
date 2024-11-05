@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import routerAlbuns from "./albuns/routerAlbuns";
-import routerMusics from "./musics/routerMusics"
+//mport routerAlbuns from "./albuns/routerAlbuns";
+//import routerMusics from "./musics/routerMusics"
 
 const app = express();
 app.use(cors());
@@ -40,5 +40,5 @@ app.get("/search", async (req, res) => {
   }
 });*/
 
-app.use("/albuns", routerAlbuns);
-app.use("/musics", routerMusics)
+//app.use("/albuns", routerAlbuns);
+//app.use("/musics", routerMusics)
