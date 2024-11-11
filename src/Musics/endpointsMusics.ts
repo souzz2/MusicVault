@@ -4,7 +4,7 @@ import {
   findMusicById as findMusicByIdData,
   searchMusicByName as getMusicsByName,
   addMusics as addMusic
-} from "./dataMusics";
+} from "../data/dataMusics";
 /*
 app.delete("/musics/:id", async (req, res) => {
     try {
@@ -17,7 +17,7 @@ app.delete("/musics/:id", async (req, res) => {
       }
       res.send(`Musica ${id} deletada`);
     } catch (error) {
-      res.status(500).json({ message: "Erro ao deletar a música" });
+      res.status(500).json({ message: "Erro ao deleta a música" });
     }
   });
   
