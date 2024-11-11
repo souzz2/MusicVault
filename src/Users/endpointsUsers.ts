@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 import {
   insertUserData as insertUser,
   getUserByEmailData as getUserByEmail,
-} from "./dataUsers";
+} from "../data/dataUsers";
 import { generateToken } from "../services/authenticator";
 import { hash } from "../services/hashManager";
 import { generatedId } from "../services/idGenerator";
 import { compare } from "bcrypt";
-import { user } from "./dataUsers";
+import { user } from "../data/dataUsers";
 
 export const signup = async (req: Request, res: Response) => {
   try {
