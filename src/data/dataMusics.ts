@@ -1,13 +1,8 @@
 import connection from "../connection";
+import { music } from "../types/typesMusics";
 
-interface Music {
-  idmusic: string;
-  namemusic: string;
-  genremusic: string;
-  duration: string;
-  idalbum: string;
-}
-/*
+export class musicData {
+  /*
 const deleteMusicById = async (id) => {
     return await connection("musics").where({ idmusic: id }).delete();
   };
@@ -19,7 +14,13 @@ const deleteMusicById = async (id) => {
   };
   */
 
-  export const addMusics = async (idmusic: string, namemusic: string, genremusic: string,duration:string, idalbum: string): Promise<Music[]> => {
+  addMusics = async (
+    idmusic: string,
+    namemusic: string,
+    genremusic: string,
+    duration: string,
+    idalbum: string
+  ) => {
     return await connection("musics").insert({
       idmusic,
       namemusic,
@@ -29,21 +30,22 @@ const deleteMusicById = async (id) => {
     });
   };
 
-export const findMusicById = async (id: string): Promise<Music[]> => {
-  return await connection("musics")
-    .where("idmusic", "=", id)
-    .orderBy("idmusic", "asc")
-    .limit(10);
-};
+  findMusicById = async (id: string) => {
+    return await connection("musics")
+      .where("idmusic", "=", id)
+      .orderBy("idmusic", "asc")
+      .limit(10);
+  };
 
-export const searchMusicByName = async (name: string): Promise<Music[]> => {
-  return await connection("musics")
-    .select("namemusic")
-    .where("namemusic", "like", `%${name}%`)
-    .orderBy("namemusic", "asc")
-    .limit(5);
-};
+  searchMusicByName = async (name: string) => {
+    return await connection("musics")
+      .select("namemusic")
+      .where("namemusic", "like", `%${name}%`)
+      .orderBy("namemusic", "asc")
+      .limit(5);
+  };
 
-export const getMusics = async (): Promise<Music[]> => {
-  return await connection("musics").orderBy("idmusic", "asc").limit(10);
-};
+  getMusics = async () => {
+    return await connection("musics").orderBy("idmusic", "asc").limit(10);
+  };
+}
