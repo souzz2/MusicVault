@@ -1,22 +1,24 @@
-import { compare } from "bcrypt";
-import { albumData } from "../data/dataAlbuns";
+import { albumData } from "../data/dataAlbuns"
 import { generateToken, payload } from "../services/authenticator";
 import { generatedId } from "../services/idGenerator";
 
 export class AlbumBusiness {
   albumData = new albumData();
+
   getAlbumsMusic = async (id: string) => {
     try {
-      const AlbunsMusics =  this.albumData.getAlbumsMusicData(id);
       if (!id) {
         throw new Error("É necessário preencher o parâmetro id");
       }
-      if (!AlbunsMusics) {
-        throw new Error("Album não encontrado");
+
+      const AlbunsMusics = await this.albumData.getAlbumsMusicData(id);
+      if (!AlbunsMusics || AlbunsMusics.length === 0) {
+        throw new Error("Álbum não encontrado");
       }
 
+      return AlbunsMusics;
     } catch (error) {
-      
+      throw new Error("Erro ao buscar as músicas do álbum");
     }
   };
 
@@ -25,24 +27,28 @@ export class AlbumBusiness {
       if (!name) {
         throw new Error('O parâmetro de busca "name" é obrigatório.');
       }
-        const albums = await this.albumData.getAlbumsByNameData(name)
-      if (!albums.length) {
-        throw new Error("Nenhum álbum foi encontrado.");
+
+      const albums = await this.albumData.getAlbumsByNameData(name);
+      if (!albums || albums.length === 0) {
+        throw new Error("Nenhum álbum encontrado.");
       }
-    } catch (error: any) {
-      throw new Error("Erro")////
+
+      return albums;
+    } catch (error) {
+      throw new Error("Erro ao buscar álbuns");
     }
   };
 
-  getAlbum = async (req: Request, res: Response) => {
+  getAlbums = async () => {
     try {
-      const result = await getAlbums();
-      if (result.length === 0) {
-        throw new Error("Não há playlists disponíveis no momento.");
+      const albums = await this.albumData.getAlbumsData();
+      if (albums.length === 0) {
+        throw new Error("Não há álbuns disponíveis no momento.");
       }
-      res.send(result);
+
+      return albums;
     } catch (error) {
-      res.status(404).json({ message: "Erro ao buscar playlists.", error });
+      throw new Error("Erro ao buscar álbuns");
     }
   };
 }
