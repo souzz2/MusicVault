@@ -1,4 +1,4 @@
-enum USER_ROLES {
+export enum userRole {
     NORMAL = "NORMAL",
     ADMIN = "ADMIN",
     ARTISTA = "ARTISTA",
@@ -6,7 +6,7 @@ enum USER_ROLES {
   
   export type authenticationData = {
     iduser: string;
-    role: USER_ROLES;
+    role: userRole;
   };
   
   export type user = {
@@ -14,5 +14,5 @@ enum USER_ROLES {
     nickname: string;
     emailuser: string;
     password: string;
-    role: USER_ROLES;
+    role: userRole;
   };

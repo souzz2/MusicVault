@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import routerAlbuns from "./albuns/routerAlbuns";
-import routerMusics from "./musics/routerMusics";
-import routerUsers from "./users/routerUsers";
-import routerArtists from "./artists/routerArtists";
+import routerAlbuns from "./router/routerAlbuns";
+import routerMusics from "./router/routerMusics";
+import routerUsers from "./router/routerUsers";
+import routerArtists from "./router/routerArtists";
 
 const app = express();
 app.use(cors());

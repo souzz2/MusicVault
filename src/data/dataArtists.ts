@@ -1,7 +1,7 @@
 import connection from "../connection";
 import { artist } from "../types/typesArtists";
 
-export class Artist {
+export class artistData {
   getArtistByIdData = async (id: string) => {
     return await connection("artists")
       .where("idartist", "=", id)
