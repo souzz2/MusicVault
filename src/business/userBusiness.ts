@@ -1,29 +1,33 @@
-import { Request, Response } from "express";
-import {
-  insertUserData as insertUser,
-  getUserByEmailData as getUserByEmail,
-} from "../data/dataUsers";
+import { userData } from "../data/dataUsers";
 import { generateToken } from "../services/authenticator";
-import { hash } from "../services/hashManager";
+import { hash, compare } from "../services/hashManager";
 import { generatedId } from "../services/idGenerator";
-import { compare } from "bcrypt";
-import { user } from "../data/dataUsers";
+import { userRole, user } from "../types/typeUsers";
 
-export const signup = async (req: Request, res: Response) => {
-  try {
-    const { nickname, emailuser, password, role } = req.body;
-
+export class UserBusinnes {
+  userData = new userData();
+  signupUser = async ({ nickname, emailuser, password, role }: user) => {
     if (!nickname || !emailuser || !password || !role) {
       throw new Error(
-        'Preencha os campos "name","nickname", "email" e "password"'
+        'Preencha os campos "nickname", "emailuser", "password" e "role"'
       );
     }
-    /*ciar get email para validar usuário existente*/
-    const iduser: string = generatedId();
 
+    if (!Object.values(userRole).includes(role)) {
+      throw new Error(
+        "O 'role' deve ser um dos valores: NORMAL, ADMIN, ARTISTA."
+      );
+    }
+
+    const existingUser = await this.userData.getUserByEmailData(emailuser);
+    if (existingUser) {
+      throw new Error("Usuário já existe com este e-mail.");
+    }
+
+    const iduser = generatedId();
     const cypherPassword = await hash(password);
 
-    await insertUser({
+    await this.userData.insertUserData({
       iduser,
       nickname,
       emailuser,
@@ -31,50 +35,35 @@ export const signup = async (req: Request, res: Response) => {
       role,
     });
 
-    const token: string = generateToken({
-      iduser,
-      role: role,
-    });
+    const token = generateToken({ iduser, role });
+    return { message: "Usuário criado!", token };
+  };
 
-    res.status(201).send({
-      message: "Usuário criado!",
-      token,
-    });
-  } catch (error) {
-    res.status(404).json({ message: "Erro ao se registrar.", error });
-  }
-};
-
-export const login = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { emailuser, password } = req.body;
-
+  loginUser = async ({
+    emailuser,
+    password,
+  }: {
+    emailuser: string;
+    password: string;
+  }) => {
     if (!emailuser || !password) {
-      throw new Error("'email' e 'senha' são obrigatórios");
+      throw new Error("'emailuser' e 'password' são obrigatórios");
     }
 
-    const user: user = await getUserByEmail(emailuser);
-
-    if (!user) {
+    const userFromDb = await this.userData.getUserByEmailData(emailuser);
+    if (!userFromDb) {
       throw new Error("Usuário não encontrado ou senha incorreta");
     }
 
-    const passwordIsCorrect: boolean = await compare(password, user.password);
-
+    const passwordIsCorrect = await compare(password, userFromDb.password);
     if (!passwordIsCorrect) {
       throw new Error("Usuário não encontrado ou senha incorreta");
     }
 
-    const token: string = generateToken({
-      iduser: user.iduser,
-      role: user.role,
+    const token = generateToken({
+      iduser: userFromDb.iduser,
+      role: userFromDb.role,
     });
-
-    res.send({
-      message: "Usuário logado!",
-      token,
-    });
-  } catch (error) {
-    res.status(400).json({ message: "Não foi possível realizar o login" });
-  }
-};
+    return { message: "Usuário logado!", token };
+  };
+}

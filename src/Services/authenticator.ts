@@ -12,6 +12,6 @@ export const getTokenData = (token: string): payload => {
 };
 
 export type payload = {
-  id: string,
+  iduser: string,
   role: userRole
 }
