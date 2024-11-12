@@ -1,10 +1,10 @@
-import { Router } from "express";
-import * as endpointsAlbuns from "../business/albumBusiness";
+import express from 'express';
+import { AlbumController } from '../controller/albumController';
 
-const router = Router();
+export const albumRouter = express.Router();
 
-router.get("/", endpointsAlbuns.getAlbum);
-router.get("/search", endpointsAlbuns.searchAlbumsByName);
-router.get("/music/:id", endpointsAlbuns.getAlbumsMusic);
+const albumController = new AlbumController();
 
-export default router;
+albumRouter.get('/albums', albumController.getAlbums);
+albumRouter.get('/albums/:id', albumController.getAlbumsMusic);
+albumRouter.get('/search', albumController.searchAlbumsByName);
