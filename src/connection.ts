@@ -1,4 +1,4 @@
-import knex, { Knex } from "knex";
+import knex from "knex";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -14,4 +14,4 @@ const connection = knex({
     multipleStatements: true,
   },
 });
-export default connection;  
+export default connection;

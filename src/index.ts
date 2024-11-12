@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import { albumRouter } from "./router/routerAlbuns";
+import { artistRouter } from "./router/routerArtists";
+import { musicRouter } from "./router/routerMusics";
+import { userRouter } from "./router/routerUsers";
 
 const app = express();
 app.use(cors());
@@ -39,7 +42,7 @@ app.get("/search", async (req, res) => {
   }
 });*/
 
-app.use("/albuns", albumRouter);
-//app.use("/musics", routerMusics);
-//app.use("/artists", routerArtists);
-//app.use("/", routerUsers);
+app.use("/albums", albumRouter);
+app.use("/musics", artistRouter);
+app.use("/artists", musicRouter);
+app.use("/user", userRouter);

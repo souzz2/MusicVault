@@ -6,9 +6,13 @@ export class userData {
     await connection.insert(user).into("users");
   };
 
-  getUserByEmailData = async (email: string): Promise<user> => {
+  getUserByEmailData = async (email: string): Promise<user | null> => {
     try {
-      const result = await connection("users").select("*").where({ email });
+      const result = await connection("users")
+        .select("*")
+        .where({ emailuser: email });
+
+      if (result.length === 0) return null;
 
       return {
         iduser: result[0].iduser,
@@ -18,7 +22,7 @@ export class userData {
         role: result[0].role,
       };
     } catch (error) {
-      throw new Error("Não foi possivel realizar o login");
+      throw new Error("Não foi possível realizar o login");
     }
   };
 }

@@ -1,10 +1,10 @@
 import express from "express";
 import { musicController } from "../controller/musicController";
 
-export const musicRoutes = express.Router();
+export const musicRouter = express.Router();
 const controller = new musicController();
 
-musicRoutes.post("/musics", controller.postMusics);
-musicRoutes.get("/musics/:id", controller.getMusicsById);
-musicRoutes.get("/musics/search", controller.searchMusicByName);
-musicRoutes.get("/musics", controller.getMusics);
+musicRouter.post("/", controller.postMusics);
+musicRouter.get("/:id", controller.getMusicsById);
+musicRouter.get("/search", controller.searchMusicByName);
+musicRouter.get("/", controller.getMusics);

@@ -1,9 +1,31 @@
-import { albumData } from "../data/dataAlbuns"
+import { albumData } from "../data/dataAlbuns";
 import { generateToken, payload } from "../services/authenticator";
 import { generatedId } from "../services/idGenerator";
 
 export class AlbumBusiness {
   albumData = new albumData();
+
+  addAlbum = async (
+    idalbum: string,
+    namealbum: string,
+    releasealbum: string,
+    idartist: string,
+    idmusic: string
+  ) => {
+    try {
+      await this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, idmusic);
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao inserir álbum");
+    }
+  };
+
+  deleteAlbum = async (id: string) => {
+    try {
+      await this.albumData.deleteAlbum(id);
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao deletar álbum");
+    }
+  };
 
   getAlbumsMusic = async (id: string) => {
     try {

@@ -6,7 +6,7 @@ export class artistData {
       const result = await connection("artists")
         .where("idartist", "=", id)
         .orderBy("idartist", "asc")
-        .limit(1); 
+        .limit(1);
       if (!result.length) {
         throw new Error(`Artista com id ${id} não encontrado`);
       }

@@ -10,7 +10,9 @@ export class artistController {
       const artists = await this.artistBusiness.searchArtistsByName(name);
       res.status(200).json({ artists });
     } catch (error: any) {
-      res.status(500).json({ message: error.message || "Erro ao buscar artista", error });
+      res
+        .status(500)
+        .json({ message: error.message || "Erro ao buscar artista", error });
     }
   };
 
@@ -20,7 +22,9 @@ export class artistController {
       const artist = await this.artistBusiness.getArtistsMusic(id);
       res.status(200).json({ artist });
     } catch (error: any) {
-      res.status(500).json({ message: error.message || "Erro ao buscar artista", error });
+      res
+        .status(500)
+        .json({ message: error.message || "Erro ao buscar artista", error });
     }
   };
 
@@ -29,7 +33,9 @@ export class artistController {
       const artists = await this.artistBusiness.getAllArtists();
       res.status(200).json({ artists });
     } catch (error: any) {
-      res.status(500).json({ message: error.message || "Erro ao buscar artistas", error });
+      res
+        .status(500)
+        .json({ message: error.message || "Erro ao buscar artistas", error });
     }
   };
 }

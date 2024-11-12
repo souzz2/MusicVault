@@ -32,7 +32,6 @@ export class musicBusiness {
     }
   };
 
-  // Método para obter todas as músicas
   getAllMusics = async () => {
     try {
       const musics = await this.musicData.getMusics();
@@ -53,7 +52,13 @@ export class musicBusiness {
     idalbum: string
   ) => {
     try {
-      await this.musicData.addMusics(idmusic, namemusic, genremusic, duration, idalbum);
+      await this.musicData.addMusics(
+        idmusic,
+        namemusic,
+        genremusic,
+        duration,
+        idalbum
+      );
     } catch (error: any) {
       throw new Error(error.message || "Erro ao adicionar a música.");
     }

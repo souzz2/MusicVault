@@ -13,4 +13,4 @@ const PORT = process.env.PORT || 3003;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-app.use("/albuns", routerAlbuns_1.albumRouter);
+app.use("/albums", routerAlbuns_1.albumRouter);

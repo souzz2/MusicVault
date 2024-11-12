@@ -1,10 +1,9 @@
-import { Router } from "express";
-import * as endpointsAlbuns from "../business/artistBusiness";
+import express from "express";
+import { artistController } from "../controller/artistController";
 
-const router = Router();
+export const artistRouter = express.Router();
+const controller = new artistController();
 
-router.get("/", endpointsAlbuns.getArtist);
-router.get("/:id", endpointsAlbuns.getArtistsById);
-router.get("/", endpointsAlbuns.searchArtistsByName);
-
-export default router;
+artistRouter.get("/search", controller.searchArtistsByName);
+artistRouter.get("/:id", controller.getArtistsById);
+artistRouter.get("/", controller.getAllArtists);

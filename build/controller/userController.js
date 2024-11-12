@@ -28,21 +28,21 @@ class UserController {
             catch (error) {
                 res.status(400).json({ message: "Erro ao se registrar" });
             }
-            login = (req, res) => __awaiter(this, void 0, void 0, function* () {
-                try {
-                    const { emailuser, password } = req.body;
-                    const result = yield this.UserBusinnes.loginUser({
-                        emailuser,
-                        password,
-                    });
-                    res.send(result);
-                }
-                catch (error) {
-                    res.status(400).json({
-                        message: "Não foi possível realizar o login",
-                    });
-                }
-            });
+        });
+        this.login = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { emailuser, password } = req.body;
+                const result = yield this.UserBusinnes.loginUser({
+                    emailuser,
+                    password,
+                });
+                res.send(result);
+            }
+            catch (error) {
+                res.status(400).json({
+                    message: "Não foi possível realizar o login",
+                });
+            }
         });
     }
 }
