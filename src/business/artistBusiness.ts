@@ -1,53 +1,44 @@
-import { Request, Response } from "express";
-import {
-  getArtistsData as getArtists,
-  getArtistsByNameData as getArtistsByName,
-  getArtistByIdData as getArtistById,
-} from "../data/dataArtists";
-
-export const searchArtistsByName = async (req: Request, res: Response) => {
-  const name = req.query.name?.toString().toLowerCase();
-  try {
-    if (!name) {
-      throw new Error('O parâmetro de busca "name" é obrigatório.');
+import { artistData } from "../data/dataArtists";
+export class artistBusiness {
+  artistData = new artistData();
+  getArtistsMusic = async (id: string) => {
+    try {
+      const artist = await this.artistData.getArtistByIdData(id);
+      if (!artist) {
+        throw new Error(`Artista com id ${id} não encontrada`);
+      }
+      return artist;
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao buscar o artista");
     }
+  };
 
-    const artists = await getArtistsByName(name);
+  searchArtistsByName = async (name: string) => {
+    try {
+      if (!name) {
+        throw new Error('O parâmetro de busca "name" é obrigatório.');
+      }
 
-    if (!artists.length) {
-      throw new Error("Nenhum artista foi encontrado.");
+      const artists = await this.artistData.getArtistsByNameData(name);
+      if (!artists.length) {
+        throw new Error("Nenhum artista foi encontrado.");
+      }
+
+      return artists;
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao buscar artista");
     }
+  };
 
-    res.status(200).json({ artists });
-  } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar artista", error });
-  }
-};
-
-export const getArtistsById = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const findArtistId = await getArtistById(id);
-    if (!id) {
-      throw new Error("É necessário preencher o parâmetro id");
+  getAllArtists = async () => {
+    try {
+      const artists = await this.artistData.getArtistsData();
+      if (artists.length === 0) {
+        throw new Error("Não há artistas disponíveis no momento.");
+      }
+      return artists;
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao buscar artistas.");
     }
-    if (!findArtistId) {
-      throw new Error(`Artista com id ${id} não encontrada`);
-    }
-    res.status(200).json(findArtistId);
-  } catch (error) {
-    res.status(500).json({ message: `Erro ao buscar a artista`, error });
-  }
-};
-
-export const getArtist = async (req: Request, res: Response) => {
-  try {
-    const result = await getArtists();
-    if (result.length === 0) {
-      throw new Error("Não há playlists disponíveis no momento.");
-    }
-    res.send(result);
-  } catch (error) {
-    res.status(404).json({ message: "Erro ao buscar playlists.", error });
-  }
-};
+  };
+}
