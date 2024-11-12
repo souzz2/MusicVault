@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { ArtistBusiness } from "../business/ArtistBusiness";
+import { artistBusiness } from "../business/artistBusiness";
 
-export class ArtistController {
-  artistBusiness = new ArtistBusiness();
+export class artistController {
+  artistBusiness = new artistBusiness();
 
   searchArtistsByName = async (req: Request, res: Response) => {
     try {
