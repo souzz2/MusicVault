@@ -2,18 +2,6 @@ import connection from "../connection";
 import { music } from "../types/typesMusics";
 
 export class musicData {
-  /*
-const deleteMusicById = async (id) => {
-    return await connection("musics").where({ idmusic: id }).delete();
-  };
- 
-  const updateMusicById = async (id, namemusic, genremusic, idalbum) => {
-    return await connection("musics")
-      .update({ namemusic, genremusic, idalbum })
-      .where({ idmusic: id });
-  };
-  */
-
   addMusics = async (
     idmusic: string,
     namemusic: string,
