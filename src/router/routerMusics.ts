@@ -1,9 +1,10 @@
 import { Router } from "express";
-import * as endpointsMusics from "../business/musicsBusiness";
+import * as musicController from "../controller/musicController";
 
 const router = Router();
 
-router.get("/", endpointsMusics.getMusics);
-router.get("/:id", endpointsMusics.getMusicsById);
-router.post("/", endpointsMusics.postMusics);
+router.get("/", musicController.getMusics);
+router.get("/:id", musicController.getMusicsById);
+router.post("/", musicController.postMusics);
+
 export default router;
