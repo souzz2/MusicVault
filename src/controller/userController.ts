@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { UserBusinnes } from "../business/userBusiness";
+import { generatedId } from "../services/idGenerator";
 
 export class UserController {
   UserBusinnes = new UserBusinnes();
@@ -16,20 +17,20 @@ export class UserController {
     } catch (error) {
       res.status(400).json({ message: "Erro ao se registrar" });
     }
+  };
 
-    login = async (req: Request, res: Response): Promise<void> => {
-      try {
-        const { emailuser, password } = req.body;
-        const result = await this.UserBusinnes.loginUser({
-          emailuser,
-          password,
-        });
-        res.send(result);
-      } catch (error) {
-        res.status(400).json({
-          message: "Não foi possível realizar o login",
-        });
-      }
-    };
+  login = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { emailuser, password } = req.body;
+      const result = await this.UserBusinnes.loginUser({
+        emailuser,
+        password,
+      });
+      res.send(result);
+    } catch (error) {
+      res.status(400).json({
+        message: "Não foi possível realizar o login",
+      });
+    }
   };
 }

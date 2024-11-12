@@ -17,7 +17,7 @@ const connection_1 = __importDefault(require("../connection"));
 class musicData {
     constructor() {
         this.addMusics = (idmusic, namemusic, genremusic, duration, idalbum) => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, connection_1.default)("musics").insert({
+            yield (0, connection_1.default)("musics").insert({
                 idmusic,
                 namemusic,
                 genremusic,
@@ -27,7 +27,7 @@ class musicData {
         });
         this.findMusicById = (id) => __awaiter(this, void 0, void 0, function* () {
             return yield (0, connection_1.default)("musics")
-                .where("idmusic", "=", id)
+                .where("idmusic", id)
                 .orderBy("idmusic", "asc")
                 .limit(10);
         });

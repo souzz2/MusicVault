@@ -10,7 +10,7 @@ export type authenticationData = {
 };
 
 export type user = {
-  iduser: string;
+  iduser?: string;
   nickname: string;
   emailuser: string;
   password: string;

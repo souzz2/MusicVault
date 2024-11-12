@@ -8,8 +8,8 @@ export class musicData {
     genremusic: string,
     duration: string,
     idalbum: string
-  ) => {
-    return await connection("musics").insert({
+  ): Promise<void> => {
+    await connection("musics").insert({
       idmusic,
       namemusic,
       genremusic,
@@ -18,14 +18,14 @@ export class musicData {
     });
   };
 
-  findMusicById = async (id: string) => {
+  findMusicById = async (id: string): Promise<music[]> => {
     return await connection("musics")
-      .where("idmusic", "=", id)
+      .where("idmusic", id)
       .orderBy("idmusic", "asc")
       .limit(10);
   };
 
-  searchMusicByName = async (name: string) => {
+  searchMusicByName = async (name: string): Promise<music[]> => {
     return await connection("musics")
       .select("namemusic")
       .where("namemusic", "like", `%${name}%`)
@@ -33,7 +33,7 @@ export class musicData {
       .limit(5);
   };
 
-  getMusics = async () => {
+  getMusics = async (): Promise<music[]> => {
     return await connection("musics").orderBy("idmusic", "asc").limit(10);
   };
 }

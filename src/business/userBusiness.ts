@@ -1,5 +1,5 @@
 import { userData } from "../data/dataUsers";
-import { generateToken } from "../services/authenticator";
+import { generateToken, payload } from "../services/authenticator";
 import { hash, compare } from "../services/hashManager";
 import { generatedId } from "../services/idGenerator";
 import { userRole, user } from "../types/typeUsers";
@@ -46,24 +46,29 @@ export class UserBusinnes {
     emailuser: string;
     password: string;
   }) => {
-    if (!emailuser || !password) {
-      throw new Error("'emailuser' e 'password' são obrigatórios");
-    }
+    try {
+      if (!emailuser || !password) {
+        throw new Error("'emailuser' e 'password' são obrigatórios");
+      }
 
-    const userFromDb = await this.userData.getUserByEmailData(emailuser);
-    if (!userFromDb) {
-      throw new Error("Usuário não encontrado ou senha incorreta");
-    }
+      const userFromDb = await this.userData.getUserByEmailData(emailuser);
+      if (!userFromDb) {
+        throw new Error("Usuário não encontrado ou senha incorreta");
+      }
 
-    const passwordIsCorrect = await compare(password, userFromDb.password);
-    if (!passwordIsCorrect) {
-      throw new Error("Usuário não encontrado ou senha incorreta");
-    }
+      const passwordIsCorrect = await compare(password, userFromDb.password);
+      if (!passwordIsCorrect) {
+        throw new Error("Usuário não encontrado ou senha incorreta");
+      }
 
-    const token = generateToken({
-      iduser: userFromDb.iduser,
-      role: userFromDb.role,
-    });
-    return { message: "Usuário logado!", token };
+      const payload: payload = {
+        iduser: userFromDb.iduser as string,
+        role: userFromDb.role,
+      };
+      const token = await generateToken(payload);
+      return token;
+    } catch (error: any) {
+      throw new Error(error);
+    }
   };
 }

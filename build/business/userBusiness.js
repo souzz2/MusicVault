@@ -42,22 +42,28 @@ class UserBusinnes {
             return { message: "Usuário criado!", token };
         });
         this.loginUser = (_a) => __awaiter(this, [_a], void 0, function* ({ emailuser, password, }) {
-            if (!emailuser || !password) {
-                throw new Error("'emailuser' e 'password' são obrigatórios");
+            try {
+                if (!emailuser || !password) {
+                    throw new Error("'emailuser' e 'password' são obrigatórios");
+                }
+                const userFromDb = yield this.userData.getUserByEmailData(emailuser);
+                if (!userFromDb) {
+                    throw new Error("Usuário não encontrado ou senha incorreta");
+                }
+                const passwordIsCorrect = yield (0, hashManager_1.compare)(password, userFromDb.password);
+                if (!passwordIsCorrect) {
+                    throw new Error("Usuário não encontrado ou senha incorreta");
+                }
+                const payload = {
+                    iduser: userFromDb.iduser,
+                    role: userFromDb.role,
+                };
+                const token = yield (0, authenticator_1.generateToken)(payload);
+                return token;
             }
-            const userFromDb = yield this.userData.getUserByEmailData(emailuser);
-            if (!userFromDb) {
-                throw new Error("Usuário não encontrado ou senha incorreta");
+            catch (error) {
+                throw new Error(error);
             }
-            const passwordIsCorrect = yield (0, hashManager_1.compare)(password, userFromDb.password);
-            if (!passwordIsCorrect) {
-                throw new Error("Usuário não encontrado ou senha incorreta");
-            }
-            const token = (0, authenticator_1.generateToken)({
-                iduser: userFromDb.iduser,
-                role: userFromDb.role,
-            });
-            return { message: "Usuário logado!", token };
         });
     }
 }

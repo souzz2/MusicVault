@@ -3,7 +3,7 @@ import { userRole } from "../types/typeUsers";
 
 export const generateToken = (payload: payload): string => {
   return jwt.sign(payload, process.env.JWT_KEY as string, {
-    expiresIn: "24hrs",
+    expiresIn: "24h",
   });
 };
 
