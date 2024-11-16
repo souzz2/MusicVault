@@ -43,6 +43,6 @@ app.get("/search", async (req, res) => {
 });*/
 
 app.use("/albums", albumRouter);
-app.use("/musics", artistRouter);
-app.use("/artists", musicRouter);
+app.use("/artists", artistRouter);
+app.use("/musics", musicRouter);
 app.use("/user", userRouter);

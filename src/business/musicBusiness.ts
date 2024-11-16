@@ -32,7 +32,7 @@ export class musicBusiness {
     }
   };
 
-  getAllMusics = async () => {
+  getMusics = async () => {
     try {
       const musics = await this.musicData.getMusics();
       if (musics.length === 0) {

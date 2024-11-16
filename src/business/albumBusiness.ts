@@ -4,16 +4,18 @@ import { generatedId } from "../services/idGenerator";
 
 export class AlbumBusiness {
   albumData = new albumData();
-
+  
   addAlbum = async (
-    idalbum: string,
     namealbum: string,
     releasealbum: string,
     idartist: string,
-    idmusic: string
+    idmusic: string[]
   ) => {
     try {
-      await this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, idmusic);
+      const idalbum = uuidv7,
+      await this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist);
+      // inserir com vetor de promise promise.all ou um for com .then -> usar data para inserção no banco
+      addMusics()
     } catch (error: any) {
       throw new Error(error.message || "Erro ao inserir álbum");
     }

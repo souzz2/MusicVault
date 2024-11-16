@@ -67,7 +67,7 @@ export class musicController {
 
   getMusics = async (req: Request, res: Response) => {
     try {
-      const musics = await this.musicBusiness.getAllMusics();
+      const musics = await this.musicBusiness.getMusics();
       if (!musics.length) {
         throw new Error("Não há músicas disponíveis no momento.");
       }
