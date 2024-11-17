@@ -16,6 +16,20 @@ exports.albumData = void 0;
 const connection_1 = __importDefault(require("../connection"));
 class albumData {
     constructor() {
+        this.addAlbum = (idalbum, namealbum, releasealbum, idartist, idmusic) => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, connection_1.default)("albuns").insert({
+                idalbum,
+                namealbum,
+                idartist,
+                releasealbum,
+                idmusic,
+            });
+        });
+        this.deleteAlbum = (id) => __awaiter(this, void 0, void 0, function* () {
+            return yield (0, connection_1.default)("albuns")
+                .where("idalbum", "=", id)
+                .del();
+        });
         this.getAlbumsMusicData = (id) => __awaiter(this, void 0, void 0, function* () {
             return yield (0, connection_1.default)("albuns")
                 .innerJoin("musics", "musics.idalbum", "=", "albuns.idalbum")

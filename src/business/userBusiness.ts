@@ -2,20 +2,14 @@ import { userData } from "../data/dataUsers";
 import { generateToken, payload } from "../services/authenticator";
 import { hash, compare } from "../services/hashManager";
 import { generatedId } from "../services/idGenerator";
-import { userRole, user } from "../types/typeUsers";
+import { user } from "../types/typeUsers";
 
-export class UserBusinnes {
+export class UserBusiness {
   userData = new userData();
-  signupUser = async ({ nickname, emailuser, password, role }: user) => {
-    if (!nickname || !emailuser || !password || !role) {
+  signupUser = async ({ nickname, emailuser, password }: user) => {
+    if (!nickname || !emailuser || !password) {
       throw new Error(
-        'Preencha os campos "nickname", "emailuser", "password" e "role"'
-      );
-    }
-
-    if (!Object.values(userRole).includes(role)) {
-      throw new Error(
-        "O 'role' deve ser um dos valores: NORMAL, ADMIN, ARTISTA."
+        'Preencha os campos "nickname", "emailuser" e "password"'
       );
     }
 
@@ -31,11 +25,10 @@ export class UserBusinnes {
       iduser,
       nickname,
       emailuser,
-      password: cypherPassword,
-      role,
+      password: cypherPassword
     });
 
-    const token = generateToken({ iduser, role });
+    const token = generateToken({ iduser });
     return { message: "Usuário criado!", token };
   };
 
@@ -62,13 +55,24 @@ export class UserBusinnes {
       }
 
       const payload: payload = {
-        iduser: userFromDb.iduser as string,
-        role: userFromDb.role,
+        iduser: userFromDb.iduser as string
       };
       const token = await generateToken(payload);
       return token;
     } catch (error: any) {
       throw new Error(error);
+    }
+  };
+
+  getUsers = async () => {
+    try {
+      const users = await this.userData.getUsers();
+      if (users.length === 0) {
+        throw new Error("Não há usuários disponíveis no momento.");
+      }
+      return users;
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao buscar usuários.");
     }
   };
 }

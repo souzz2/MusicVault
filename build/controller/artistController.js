@@ -21,7 +21,9 @@ class artistController {
                 res.status(200).json({ artists });
             }
             catch (error) {
-                res.status(500).json({ message: error.message || "Erro ao buscar artista", error });
+                res
+                    .status(500)
+                    .json({ message: error.message || "Erro ao buscar artista", error });
             }
         });
         this.getArtistsById = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -31,7 +33,9 @@ class artistController {
                 res.status(200).json({ artist });
             }
             catch (error) {
-                res.status(500).json({ message: error.message || "Erro ao buscar artista", error });
+                res
+                    .status(500)
+                    .json({ message: error.message || "Erro ao buscar artista", error });
             }
         });
         this.getAllArtists = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -40,7 +44,9 @@ class artistController {
                 res.status(200).json({ artists });
             }
             catch (error) {
-                res.status(500).json({ message: error.message || "Erro ao buscar artistas", error });
+                res
+                    .status(500)
+                    .json({ message: error.message || "Erro ao buscar artistas", error });
             }
         });
     }

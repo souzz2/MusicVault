@@ -2,15 +2,24 @@ import connection from "../connection";
 import { user } from "../types/typeUsers";
 
 export class userData {
-  insertUserData = async (user: user) => {
-    await connection.insert(user).into("users");
+  insertUserData = async (user: user): Promise<user> => {
+    try {
+      return await connection("users").insert({
+        iduser: user.iduser,
+        nickname: user.nickname,
+        password: user.password,
+        emailuser: user.emailuser
+      });
+    } catch (sql) {
+      throw sql;
+    }
   };
 
-  getUserByEmailData = async (email: string): Promise<user | null> => {
+  getUserByEmailData = async (emailuser: string): Promise<user | null> => {
     try {
       const result = await connection("users")
         .select("*")
-        .where({ emailuser: email });
+        .where({ emailuser: emailuser });
 
       if (result.length === 0) return null;
 
@@ -18,11 +27,18 @@ export class userData {
         iduser: result[0].iduser,
         nickname: result[0].nickname,
         emailuser: result[0].emailuser,
-        password: result[0].password,
-        role: result[0].role,
+        password: result[0].password
       };
-    } catch (error) {
-      throw new Error("Não foi possível realizar o login");
+    } catch (sql) {
+      throw sql;
+    }
+  };
+
+  getUsers = async (): Promise<user[]> => {
+    try {
+      return await connection("users").orderBy("iduser", "asc").limit(10);
+    } catch (sql) {
+      throw sql;
     }
   };
 }

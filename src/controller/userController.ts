@@ -1,28 +1,39 @@
 import { Request, Response } from "express";
-import { UserBusinnes } from "../business/userBusiness";
+import { UserBusiness } from "../business/userBusiness";
 import { generatedId } from "../services/idGenerator";
 
 export class UserController {
-  UserBusinnes = new UserBusinnes();
+  UserBusiness = new UserBusiness();
   signup = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { nickname, emailuser, password, role } = req.body;
-      const result = await this.UserBusinnes.signupUser({
-        nickname,
-        emailuser,
-        password,
-        role,
+      const { nickname, emailuser, password } = req.body;
+
+      if (!nickname || !emailuser || !password) {
+        res.status(400).json({ message: "Todos os campos são obrigatórios" });
+      }
+
+      if (!emailuser.includes("@")) {
+        res.status(400).json({ message: "Email inválido" });
+      }
+
+      if (password.length < 6) {
+        res.status(400).json({ message: "A senha deve ter pelo menos 6 caracteres" });
+      }
+
+      const token = await this.UserBusiness.signupUser({ nickname, emailuser, password });
+      res.status(201).send(token);
+    } catch (error: any) {
+      res.status(400).json({
+        message: "Erro ao se registrar",
+        error: error.message,
       });
-      res.status(201).send(result);
-    } catch (error) {
-      res.status(400).json({ message: "Erro ao se registrar" });
     }
   };
 
   login = async (req: Request, res: Response): Promise<void> => {
     try {
       const { emailuser, password } = req.body;
-      const result = await this.UserBusinnes.loginUser({
+      const result = await this.UserBusiness.loginUser({
         emailuser,
         password,
       });
@@ -33,4 +44,22 @@ export class UserController {
       });
     }
   };
+
+  getUsers = async (req: Request, res: Response) => {
+    try {
+      const user = await this.UserBusiness.getUsers();
+      if (!user.length) {
+        throw new Error("Não há usuários disponíveis no momento.");
+      }
+
+      res.status(200).json(user);
+    } catch (error: any) {
+      res
+        .status(500)
+        .json({ message: "Erro ao buscar usuários.", error: error.message });
+    }
+  };
 }
+
+
+

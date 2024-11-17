@@ -1,23 +1,23 @@
 import { albumData } from "../data/dataAlbuns";
 import { generateToken, payload } from "../services/authenticator";
 import { generatedId } from "../services/idGenerator";
+import { musicBusiness } from "./musicBusiness"; // Add this import
 
 export class AlbumBusiness {
   albumData = new albumData();
-  
-  addAlbum = async (
-    namealbum: string,
-    releasealbum: string,
-    idartist: string,
-    idmusic: string[]
-  ) => {
+  musicBusiness = new musicBusiness(); // Add this instance
+
+  addAlbum = async (idalbum: string, namealbum: string, releasealbum: string, idartist: string, idmusic: string[]) => {
     try {
-      const idalbum = uuidv7,
-      await this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist);
-      // inserir com vetor de promise promise.all ou um for com .then -> usar data para inserção no banco
-      addMusics()
+      // Validação básica
+      if (!idalbum || !namealbum || !releasealbum || !idartist || !idmusic.length) {
+        throw new Error("Todos os campos devem ser preenchidos.");
+      }
+
+      // Chamada para a camada de dados
+      await this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, idmusic);
     } catch (error: any) {
-      throw new Error(error.message || "Erro ao inserir álbum");
+      throw new Error(error.message || "Erro ao adicionar álbum");
     }
   };
 

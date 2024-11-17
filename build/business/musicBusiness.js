@@ -41,7 +41,7 @@ class musicBusiness {
                 throw new Error(error.message || "Erro ao buscar músicas");
             }
         });
-        this.getAllMusics = () => __awaiter(this, void 0, void 0, function* () {
+        this.getMusics = () => __awaiter(this, void 0, void 0, function* () {
             try {
                 const musics = yield this.musicData.getMusics();
                 if (musics.length === 0) {

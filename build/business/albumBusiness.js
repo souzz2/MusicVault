@@ -14,6 +14,24 @@ const dataAlbuns_1 = require("../data/dataAlbuns");
 class AlbumBusiness {
     constructor() {
         this.albumData = new dataAlbuns_1.albumData();
+        this.addAlbum = (namealbum, releasealbum, idartist, idmusic) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const idalbum = uuidv7, await;
+                this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist);
+                addMusics();
+            }
+            catch (error) {
+                throw new Error(error.message || "Erro ao inserir álbum");
+            }
+        });
+        this.deleteAlbum = (id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.albumData.deleteAlbum(id);
+            }
+            catch (error) {
+                throw new Error(error.message || "Erro ao deletar álbum");
+            }
+        });
         this.getAlbumsMusic = (id) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!id) {

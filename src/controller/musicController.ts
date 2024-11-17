@@ -6,15 +6,13 @@ export class musicController {
 
   postMusics = async (req: Request, res: Response) => {
     try {
-      const { idmusic, namemusic, genremusic, duration, idalbum } = req.body;
-      if (!idmusic || !namemusic || !genremusic || !duration || !idalbum) {
+      const { namemusic, genremusic, duration, idalbum } = req.body;
+      if (!namemusic || !genremusic || !duration || !idalbum) {
         throw new Error(
           "Os parâmetros de busca não foram preenchidos corretamente."
         );
       }
-
       await this.musicBusiness.addMusic(
-        idmusic,
         namemusic,
         genremusic,
         duration,

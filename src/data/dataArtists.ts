@@ -11,8 +11,8 @@ export class artistData {
         throw new Error(`Artista com id ${id} não encontrado`);
       }
       return result[0];
-    } catch (error) {
-      throw new Error("Erro ao buscar artista por ID");
+    } catch (sql) {
+      throw sql;
     }
   };
 
@@ -29,8 +29,8 @@ export class artistData {
       }
 
       return result;
-    } catch (error) {
-      throw new Error("Erro ao buscar artistas por nome");
+    } catch (sql) {
+      throw sql;
     }
   };
 
@@ -45,8 +45,8 @@ export class artistData {
       }
 
       return result;
-    } catch (error) {
-      throw new Error("Erro ao buscar todos os artistas");
+    } catch (sql) {
+      throw sql;
     }
   };
 }

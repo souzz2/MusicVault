@@ -2,39 +2,59 @@ import connection from "../connection";
 import { album } from "../types/typesAlbums";
 
 export class albumData {
-  addAlbum = async (idalbum: string, namealbum: string, releasealbum: string, idartist: string, idmusic: string) => {
-    return await connection("albuns").insert({
-      idalbum,
-      namealbum,
-      idartist,
-      releasealbum,
-      idmusic,
-    });
+  
+  addAlbum = async (idalbum: string, namealbum: string, releasealbum: string, idartist: string, idmusic: string[]) => {
+    try {
+      return await connection("albuns").insert({
+        idalbum,
+        namealbum,
+        idartist,
+        releasealbum
+      });
+    } catch (sql) {
+      throw sql;
+    }
   };
 
   deleteAlbum = async (id: string) => {
-    return await connection("albuns")
-      .where("idalbum", "=", id)
-      .del();
+    try {
+      return await connection("albuns")
+        .where("idalbum", "=", id)
+        .del();
+    } catch (sql) {
+      throw sql;
+    }
   };
 
   getAlbumsMusicData = async (id: string): Promise<any> => {
-    return await connection("albuns")
-      .innerJoin("musics", "musics.idalbum", "=", "albuns.idalbum")
-      .select("musics.namemusic")
-      .where("albuns.idalbum", "=", id)
-      .orderBy("musics.idmusic", "asc");
+    try {
+      return await connection("albuns")
+        .innerJoin("musics", "musics.idalbum", "=", "albuns.idalbum")
+        .select("musics.namemusic")
+        .where("albuns.idalbum", "=", id)
+        .orderBy("musics.idmusic", "asc");
+    } catch (sql) {
+      throw sql;
+    }
   };
 
   getAlbumsByNameData = async (name: string): Promise<any> => {
-    return await connection("albuns")
-      .select("namealbum")
-      .where("namealbum", "like", `%${name}%`)
-      .orderBy("namealbum", "asc")
-      .limit(5);
+    try {
+      return await connection("albuns")
+        .select("namealbum")
+        .where("namealbum", "like", `%${name}%`)
+        .orderBy("namealbum", "asc")
+        .limit(5);
+    } catch (sql) {
+      throw sql;
+    }
   };
 
   getAlbumsData = async (): Promise<any> => {
-    return await connection("albuns").orderBy("idalbum", "asc").limit(10);
+    try {
+      return await connection("albuns").orderBy("idalbum", "asc").limit(10);
+    } catch (sql) {
+      throw sql;
+    }
   };
 }

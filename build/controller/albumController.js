@@ -14,6 +14,40 @@ const albumBusiness_1 = require("../business/albumBusiness");
 class AlbumController {
     constructor() {
         this.albumBusiness = new albumBusiness_1.AlbumBusiness();
+        this.addAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { idalbum, namealbum, releasealbum, idartist, idmusic } = req.body;
+                if (!idalbum || !namealbum || !releasealbum || !idartist || !idmusic) {
+                    throw new Error("Todos os campos devem ser preenchidos.");
+                }
+                yield this.albumBusiness.addAlbum(idalbum, namealbum, releasealbum, idartist, idmusic);
+                res
+                    .status(201)
+                    .send({ message: `Álbum ${namealbum} inserido com sucesso!` });
+            }
+            catch (error) {
+                res
+                    .status(500)
+                    .json({ message: error.message || "Erro ao adicionar álbum", error });
+            }
+        });
+        this.deleteAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                if (!id) {
+                    throw new Error("O id do álbum é obrigatório.");
+                }
+                yield this.albumBusiness.deleteAlbum(id);
+                res
+                    .status(200)
+                    .send({ message: `Álbum com id ${id} deletado com sucesso!` });
+            }
+            catch (error) {
+                res
+                    .status(500)
+                    .json({ message: error.message || "Erro ao deletar álbum", error });
+            }
+        });
         this.getAlbumsMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
@@ -21,7 +55,9 @@ class AlbumController {
                 res.status(200).send({ musics });
             }
             catch (error) {
-                res.status(500).json({ message: error.message || "Erro ao buscar o álbum", error });
+                res
+                    .status(500)
+                    .json({ message: error.message || "Erro ao buscar o álbum", error });
             }
         });
         this.searchAlbumsByName = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -41,7 +77,9 @@ class AlbumController {
                 res.status(200).send({ albums });
             }
             catch (error) {
-                res.status(500).json({ message: error.message || "Erro ao buscar álbuns", error });
+                res
+                    .status(500)
+                    .json({ message: error.message || "Erro ao buscar álbuns", error });
             }
         });
     }

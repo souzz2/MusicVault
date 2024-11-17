@@ -1,5 +1,4 @@
 import * as jwt from "jsonwebtoken";
-import { userRole } from "../types/typeUsers";
 
 export const generateToken = (payload: payload): string => {
   return jwt.sign(payload, process.env.JWT_KEY as string, {
@@ -12,6 +11,5 @@ export const getTokenData = (token: string): payload => {
 };
 
 export type payload = {
-  iduser: string;
-  role: userRole;
+  iduser: string
 };

@@ -21,7 +21,11 @@ class userData {
         });
         this.getUserByEmailData = (email) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield (0, connection_1.default)("users").select("*").where({ email });
+                const result = yield (0, connection_1.default)("users")
+                    .select("*")
+                    .where({ emailuser: email });
+                if (result.length === 0)
+                    return null;
                 return {
                     iduser: result[0].iduser,
                     nickname: result[0].nickname,
@@ -31,7 +35,7 @@ class userData {
                 };
             }
             catch (error) {
-                throw new Error("Não foi possivel realizar o login");
+                throw new Error("Não foi possível realizar o login");
             }
         });
     }

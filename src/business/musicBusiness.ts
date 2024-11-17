@@ -1,4 +1,5 @@
 import { musicData } from "../data/dataMusics";
+import { generatedId } from "../services/idGenerator";
 
 export class musicBusiness {
   musicData = new musicData();
@@ -45,15 +46,14 @@ export class musicBusiness {
   };
 
   addMusic = async (
-    idmusic: string,
     namemusic: string,
     genremusic: string,
     duration: string,
     idalbum: string
   ) => {
     try {
+      const idmusic = generatedId();
       await this.musicData.addMusics(
-        idmusic,
         namemusic,
         genremusic,
         duration,
