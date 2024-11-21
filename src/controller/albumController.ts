@@ -5,22 +5,26 @@ import { generatedId } from "../services/idGenerator";
 export class AlbumController {
   albumBusiness = new AlbumBusiness();
 
-  /*addAlbum = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { namealbum, releasealbum, idartist, idmusic } = req.body;
-
-    // Gere um ID para o álbum
-    const idalbum = generatedId();
-
-    // Chamando a camada de business
-    await this.albumBusiness.addAlbum(idalbum, namealbum, releasealbum, idartist, idmusic);
-
-    // Enviando resposta ao cliente
-    res.status(201).send({ message: `Álbum ${namealbum} inserido com sucesso!` });
-  } catch (error: any) {
-    res.status(400).json({ message: error.message || "Erro ao adicionar álbum" });
-  }
-};*/
+  updateAlbum = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const { namealbum, releasealbum, idartist } = req.body;
+      if (!id) {
+        throw new Error("O ID do álbum é obrigatório.");
+      }
+      
+      const token = req.headers.authorization as string;
+      await this.albumBusiness.updateAlbum(id, namealbum, releasealbum, idartist, token);
+  
+      res.status(200).send({ message: "Álbum atualizado com sucesso!" });
+    } catch (error: any) {
+      res
+        .status(500)
+        .json({ message: error.message || "Erro ao atualizar álbum", error });
+    }
+  };
+  
+  
 
   deleteAlbum = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -28,8 +32,9 @@ export class AlbumController {
       if (!id) {
         throw new Error("O id do álbum é obrigatório.");
       }
-
-      await this.albumBusiness.deleteAlbum(id);
+      
+      const token = req.headers.authorization as string;
+      await this.albumBusiness.deleteAlbum(id, token);
       res
         .status(200)
         .send({ message: `Álbum com id ${id} deletado com sucesso!` });
@@ -43,7 +48,8 @@ export class AlbumController {
   getAlbumsMusic = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const musics = await this.albumBusiness.getAlbumsMusic(id);
+      const token = req.headers.authorization as string;
+      const musics = await this.albumBusiness.getAlbumsMusic(id, token);
       res.status(200).send({ musics });
     } catch (error: any) {
       res
@@ -55,7 +61,8 @@ export class AlbumController {
   searchAlbumsByName = async (req: Request, res: Response) => {
     try {
       const name = req.query.name as string;
-      const albums = await this.albumBusiness.searchAlbumsByName(name);
+      const token = req.headers.authorization as string;
+      const albums = await this.albumBusiness.searchAlbumsByName(name, token);
       res.status(200).send({ albums });
     } catch (error: any) {
       const message = error.message || "Erro ao buscar álbum";
@@ -65,7 +72,8 @@ export class AlbumController {
 
   getAlbums = async (req: Request, res: Response) => {
     try {
-      const albums = await this.albumBusiness.getAlbums();
+      const token = req.headers.authorization as string;
+      const albums = await this.albumBusiness.getAlbums(token);
       res.status(200).send({ albums });
     } catch (error: any) {
       res

@@ -16,36 +16,66 @@ exports.albumData = void 0;
 const connection_1 = __importDefault(require("../connection"));
 class albumData {
     constructor() {
+        this.updateAlbum = (id, updates) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield (0, connection_1.default)("albuns").where("idalbum", "=", id).update(updates);
+            }
+            catch (sql) {
+                throw sql;
+            }
+        });
         this.addAlbum = (idalbum, namealbum, releasealbum, idartist, idmusic) => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, connection_1.default)("albuns").insert({
-                idalbum,
-                namealbum,
-                idartist,
-                releasealbum,
-                idmusic,
-            });
+            try {
+                return yield (0, connection_1.default)("albuns").insert({
+                    idalbum,
+                    namealbum,
+                    idartist,
+                    releasealbum,
+                });
+            }
+            catch (sql) {
+                throw sql;
+            }
         });
         this.deleteAlbum = (id) => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, connection_1.default)("albuns")
-                .where("idalbum", "=", id)
-                .del();
+            try {
+                return yield (0, connection_1.default)("albuns").where("idalbum", "=", id).del();
+            }
+            catch (sql) {
+                throw sql;
+            }
         });
         this.getAlbumsMusicData = (id) => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, connection_1.default)("albuns")
-                .innerJoin("musics", "musics.idalbum", "=", "albuns.idalbum")
-                .select("musics.namemusic")
-                .where("albuns.idalbum", "=", id)
-                .orderBy("musics.idmusic", "asc");
+            try {
+                return yield (0, connection_1.default)("albuns")
+                    .innerJoin("musics", "musics.idalbum", "=", "albuns.idalbum")
+                    .select("musics.namemusic")
+                    .where("albuns.idalbum", "=", id)
+                    .orderBy("musics.idmusic", "asc");
+            }
+            catch (sql) {
+                throw sql;
+            }
         });
         this.getAlbumsByNameData = (name) => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, connection_1.default)("albuns")
-                .select("namealbum")
-                .where("namealbum", "like", `%${name}%`)
-                .orderBy("namealbum", "asc")
-                .limit(5);
+            try {
+                return yield (0, connection_1.default)("albuns")
+                    .select("namealbum")
+                    .where("namealbum", "like", `%${name}%`)
+                    .orderBy("namealbum", "asc")
+                    .limit(5);
+            }
+            catch (sql) {
+                throw sql;
+            }
         });
         this.getAlbumsData = () => __awaiter(this, void 0, void 0, function* () {
-            return yield (0, connection_1.default)("albuns").orderBy("idalbum", "asc").limit(10);
+            try {
+                return yield (0, connection_1.default)("albuns").orderBy("idalbum", "asc").limit(10);
+            }
+            catch (sql) {
+                throw sql;
+            }
         });
     }
 }

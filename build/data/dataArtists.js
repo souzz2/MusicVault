@@ -27,8 +27,8 @@ class artistData {
                 }
                 return result[0];
             }
-            catch (error) {
-                throw new Error("Erro ao buscar artista por ID");
+            catch (sql) {
+                throw sql;
             }
         });
         this.getArtistsByNameData = (name) => __awaiter(this, void 0, void 0, function* () {
@@ -43,8 +43,8 @@ class artistData {
                 }
                 return result;
             }
-            catch (error) {
-                throw new Error("Erro ao buscar artistas por nome");
+            catch (sql) {
+                throw sql;
             }
         });
         this.getArtistsData = () => __awaiter(this, void 0, void 0, function* () {
@@ -57,8 +57,8 @@ class artistData {
                 }
                 return result;
             }
-            catch (error) {
-                throw new Error("Erro ao buscar todos os artistas");
+            catch (sql) {
+                throw sql;
             }
         });
     }

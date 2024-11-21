@@ -10,14 +10,17 @@ export class UserController {
 
       if (!nickname || !emailuser || !password) {
         res.status(400).json({ message: "Todos os campos são obrigatórios" });
+        return;
       }
 
       if (!emailuser.includes("@")) {
         res.status(400).json({ message: "Email inválido" });
+        return;
       }
 
       if (password.length < 6) {
         res.status(400).json({ message: "A senha deve ter pelo menos 6 caracteres" });
+        return;
       }
 
       const token = await this.UserBusiness.signupUser({ nickname, emailuser, password });

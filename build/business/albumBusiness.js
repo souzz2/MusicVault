@@ -14,26 +14,46 @@ const dataAlbuns_1 = require("../data/dataAlbuns");
 class AlbumBusiness {
     constructor() {
         this.albumData = new dataAlbuns_1.albumData();
-        this.addAlbum = (namealbum, releasealbum, idartist, idmusic) => __awaiter(this, void 0, void 0, function* () {
+        this.updateAlbum = (id, token, namealbum, releasealbum, idartist) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const idalbum = uuidv7, await;
-                this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist);
-                addMusics();
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
+                if (!id) {
+                    throw new Error("O ID do álbum é obrigatório.");
+                }
+                if (!namealbum && !releasealbum && !idartist) {
+                    throw new Error("Pelo menos um campo deve ser informado para atualizar.");
+                }
+                const updates = {};
+                if (namealbum)
+                    updates.namealbum = namealbum;
+                if (releasealbum)
+                    updates.releasealbum = releasealbum;
+                if (idartist)
+                    updates.idartist = idartist;
+                yield this.albumData.updateAlbum(id, updates);
             }
             catch (error) {
-                throw new Error(error.message || "Erro ao inserir álbum");
+                throw new Error(error.message || "Erro ao atualizar álbum.");
             }
         });
-        this.deleteAlbum = (id) => __awaiter(this, void 0, void 0, function* () {
+        this.deleteAlbum = (id, token) => __awaiter(this, void 0, void 0, function* () {
             try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
                 yield this.albumData.deleteAlbum(id);
             }
             catch (error) {
                 throw new Error(error.message || "Erro ao deletar álbum");
             }
         });
-        this.getAlbumsMusic = (id) => __awaiter(this, void 0, void 0, function* () {
+        this.getAlbumsMusic = (id, token) => __awaiter(this, void 0, void 0, function* () {
             try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
                 if (!id) {
                     throw new Error("É necessário preencher o parâmetro id");
                 }
@@ -47,8 +67,11 @@ class AlbumBusiness {
                 throw new Error("Erro ao buscar as músicas do álbum");
             }
         });
-        this.searchAlbumsByName = (name) => __awaiter(this, void 0, void 0, function* () {
+        this.searchAlbumsByName = (name, token) => __awaiter(this, void 0, void 0, function* () {
             try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
                 if (!name) {
                     throw new Error('O parâmetro de busca "name" é obrigatório.');
                 }
@@ -62,8 +85,11 @@ class AlbumBusiness {
                 throw new Error("Erro ao buscar álbuns");
             }
         });
-        this.getAlbums = () => __awaiter(this, void 0, void 0, function* () {
+        this.getAlbums = (token) => __awaiter(this, void 0, void 0, function* () {
             try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
                 const albums = yield this.albumData.getAlbumsData();
                 if (albums.length === 0) {
                     throw new Error("Não há álbuns disponíveis no momento.");

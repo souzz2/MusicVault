@@ -17,25 +17,42 @@ const connection_1 = __importDefault(require("../connection"));
 class userData {
     constructor() {
         this.insertUserData = (user) => __awaiter(this, void 0, void 0, function* () {
-            yield connection_1.default.insert(user).into("users");
+            try {
+                return yield (0, connection_1.default)("users").insert({
+                    iduser: user.iduser,
+                    nickname: user.nickname,
+                    password: user.password,
+                    emailuser: user.emailuser
+                });
+            }
+            catch (sql) {
+                throw sql;
+            }
         });
-        this.getUserByEmailData = (email) => __awaiter(this, void 0, void 0, function* () {
+        this.getUserByEmailData = (emailuser) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield (0, connection_1.default)("users")
                     .select("*")
-                    .where({ emailuser: email });
+                    .where({ emailuser: emailuser });
                 if (result.length === 0)
                     return null;
                 return {
                     iduser: result[0].iduser,
                     nickname: result[0].nickname,
                     emailuser: result[0].emailuser,
-                    password: result[0].password,
-                    role: result[0].role,
+                    password: result[0].password
                 };
             }
-            catch (error) {
-                throw new Error("Não foi possível realizar o login");
+            catch (sql) {
+                throw sql;
+            }
+        });
+        this.getUsers = () => __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield (0, connection_1.default)("users").orderBy("iduser", "asc").limit(10);
+            }
+            catch (sql) {
+                throw sql;
             }
         });
     }

@@ -8,6 +8,8 @@ const express_1 = __importDefault(require("express"));
 const musicController_1 = require("../controller/musicController");
 exports.musicRouter = express_1.default.Router();
 const controller = new musicController_1.musicController();
+exports.musicRouter.delete("/:id", controller.deleteMusic);
+exports.musicRouter.patch("/:id", controller.updateMusic);
 exports.musicRouter.post("/", controller.postMusics);
 exports.musicRouter.get("/:id", controller.getMusicsById);
 exports.musicRouter.get("/search", controller.searchMusicByName);

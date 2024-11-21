@@ -1,36 +1,64 @@
-import { albumData } from "../data/dataAlbuns";
+import { albumData, album } from "../data/dataAlbuns";
 import { generateToken, payload } from "../services/authenticator";
 import { generatedId } from "../services/idGenerator";
 import { musicBusiness } from "./musicBusiness"; // Add this import
 
 export class AlbumBusiness {
   albumData = new albumData();
-  musicBusiness = new musicBusiness(); // Add this instance
 
-  addAlbum = async (idalbum: string, namealbum: string, releasealbum: string, idartist: string, idmusic: string[]) => {
+  updateAlbum = async (
+    id: string,
+    token: string,
+    namealbum?: string,
+    releasealbum?: string,
+    idartist?: string
+  ) => {
     try {
-      // Validação básica
-      if (!idalbum || !namealbum || !releasealbum || !idartist || !idmusic.length) {
-        throw new Error("Todos os campos devem ser preenchidos.");
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+      if (!id) {
+        throw new Error("O ID do álbum é obrigatório.");
       }
 
-      // Chamada para a camada de dados
-      await this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, idmusic);
+      if (!namealbum && !releasealbum && !idartist) {
+        throw new Error(
+          "Pelo menos um campo deve ser informado para atualizar."
+        );
+      }
+
+      const updates: {
+        namealbum?: string;
+        releasealbum?: string;
+        idartist?: string;
+      } = {};
+
+      if (namealbum) updates.namealbum = namealbum;
+      if (releasealbum) updates.releasealbum = releasealbum;
+      if (idartist) updates.idartist = idartist;
+
+      await this.albumData.updateAlbum(id, updates);
     } catch (error: any) {
-      throw new Error(error.message || "Erro ao adicionar álbum");
+      throw new Error(error.message || "Erro ao atualizar álbum.");
     }
   };
 
-  deleteAlbum = async (id: string) => {
+  deleteAlbum = async (id: string, token: string) => {
     try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
       await this.albumData.deleteAlbum(id);
     } catch (error: any) {
       throw new Error(error.message || "Erro ao deletar álbum");
     }
   };
 
-  getAlbumsMusic = async (id: string) => {
+  getAlbumsMusic = async (id: string, token: string) => {
     try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
       if (!id) {
         throw new Error("É necessário preencher o parâmetro id");
       }
@@ -46,8 +74,12 @@ export class AlbumBusiness {
     }
   };
 
-  searchAlbumsByName = async (name: string) => {
+  searchAlbumsByName = async (name: string, token: string) => {
     try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+
       if (!name) {
         throw new Error('O parâmetro de busca "name" é obrigatório.');
       }
@@ -63,8 +95,11 @@ export class AlbumBusiness {
     }
   };
 
-  getAlbums = async () => {
+  getAlbums = async (token: string) => {
     try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
       const albums = await this.albumData.getAlbumsData();
       if (albums.length === 0) {
         throw new Error("Não há álbuns disponíveis no momento.");

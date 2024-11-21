@@ -2,14 +2,30 @@ import connection from "../connection";
 import { album } from "../types/typesAlbums";
 
 export class albumData {
-  
-  addAlbum = async (idalbum: string, namealbum: string, releasealbum: string, idartist: string, idmusic: string[]) => {
+  updateAlbum = async (
+    id: string,
+    updates: { namealbum?: string; releasealbum?: string; idartist?: string }
+  ): Promise<void> => {
+    try {
+      await connection("albuns").where("idalbum", "=", id).update(updates);
+    } catch (sql) {
+      throw sql;
+    }
+  };
+
+  addAlbum = async (
+    idalbum: string,
+    namealbum: string,
+    releasealbum: string,
+    idartist: string,
+    idmusic: string[]
+  ) => {
     try {
       return await connection("albuns").insert({
         idalbum,
         namealbum,
         idartist,
-        releasealbum
+        releasealbum,
       });
     } catch (sql) {
       throw sql;
@@ -18,9 +34,7 @@ export class albumData {
 
   deleteAlbum = async (id: string) => {
     try {
-      return await connection("albuns")
-        .where("idalbum", "=", id)
-        .del();
+      return await connection("albuns").where("idalbum", "=", id).del();
     } catch (sql) {
       throw sql;
     }
@@ -58,3 +72,4 @@ export class albumData {
     }
   };
 }
+export { album };

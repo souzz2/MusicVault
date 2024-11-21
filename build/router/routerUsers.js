@@ -10,3 +10,4 @@ exports.userRouter = express_1.default.Router();
 const controller = new userController_1.UserController();
 exports.userRouter.post("/signup", controller.signup);
 exports.userRouter.post("/login", controller.login);
+exports.userRouter.get("/", controller.getUsers);

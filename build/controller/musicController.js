@@ -14,13 +14,54 @@ const musicBusiness_1 = require("../business/musicBusiness");
 class musicController {
     constructor() {
         this.musicBusiness = new musicBusiness_1.musicBusiness();
+        this.deleteMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                if (!id) {
+                    throw new Error("O ID da música é obrigatório para exclusão.");
+                }
+                const token = req.headers.authorization;
+                yield this.musicBusiness.deleteMusic(id, token);
+                res
+                    .status(200)
+                    .send({ message: `Música com ID ${id} deletada com sucesso.` });
+            }
+            catch (error) {
+                res
+                    .status(500)
+                    .json({ message: "Erro ao deletar música.", error: error.message });
+            }
+        });
+        this.updateMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const { namemusic, genremusic, duration, idalbum } = req.body;
+                if (!id || (!namemusic && !genremusic && !duration && !idalbum)) {
+                    throw new Error("Parâmetros de atualização inválidos.");
+                }
+                const token = req.headers.authorization;
+                yield this.musicBusiness.updateMusic(id, token, {
+                    namemusic,
+                    genremusic,
+                    duration,
+                    idalbum,
+                });
+                res.status(200).send(`Música com ID ${id} atualizada com sucesso.`);
+            }
+            catch (error) {
+                res
+                    .status(500)
+                    .json({ message: "Erro ao atualizar música.", error: error.message });
+            }
+        });
         this.postMusics = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const { idmusic, namemusic, genremusic, duration, idalbum } = req.body;
-                if (!idmusic || !namemusic || !genremusic || !duration || !idalbum) {
+                const { namemusic, genremusic, duration, idalbum } = req.body;
+                if (!namemusic || !genremusic || !duration || !idalbum) {
                     throw new Error("Os parâmetros de busca não foram preenchidos corretamente.");
                 }
-                yield this.musicBusiness.addMusic(idmusic, namemusic, genremusic, duration);
+                const token = req.headers.authorization;
+                yield this.musicBusiness.addMusic(namemusic, genremusic, duration, idalbum, token);
                 res.status(200).send(`Música ${namemusic} adicionada com sucesso!`);
             }
             catch (error) {
@@ -32,7 +73,8 @@ class musicController {
         this.getMusicsById = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const music = yield this.musicBusiness.getMusicById(id);
+                const token = req.headers.authorization;
+                const music = yield this.musicBusiness.getMusicById(id, token);
                 if (!music) {
                     throw new Error(`Música com id ${id} não encontrada`);
                 }
@@ -51,7 +93,8 @@ class musicController {
                 if (!name) {
                     throw new Error('O parâmetro de busca "name" é obrigatório.');
                 }
-                const musics = yield this.musicBusiness.searchMusicByName(name);
+                const token = req.headers.authorization;
+                const musics = yield this.musicBusiness.searchMusicByName(name, token);
                 if (!musics || musics.length === 0) {
                     throw new Error("Nenhuma música foi encontrada.");
                 }
@@ -65,7 +108,8 @@ class musicController {
         });
         this.getMusics = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const musics = yield this.musicBusiness.getMusics();
+                const token = req.headers.authorization;
+                const musics = yield this.musicBusiness.getMusics(token);
                 if (!musics.length) {
                     throw new Error("Não há músicas disponíveis no momento.");
                 }

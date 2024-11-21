@@ -11,11 +11,48 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.musicBusiness = void 0;
 const dataMusics_1 = require("../data/dataMusics");
+const idGenerator_1 = require("../services/idGenerator");
 class musicBusiness {
     constructor() {
         this.musicData = new dataMusics_1.musicData();
-        this.getMusicById = (id) => __awaiter(this, void 0, void 0, function* () {
+        this.deleteMusic = (id, token) => __awaiter(this, void 0, void 0, function* () {
             try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
+                if (!id) {
+                    throw new Error("O ID da música é obrigatório para exclusão.");
+                }
+                const music = yield this.musicData.findMusicById(id);
+                if (!music || music.length === 0) {
+                    throw new Error(`Música com id ${id} não encontrada.`);
+                }
+                yield this.musicData.deleteMusic(id);
+            }
+            catch (error) {
+                throw new Error(error.message || "Erro ao deletar a música.");
+            }
+        });
+        this.updateMusic = (id, token, updates) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
+                const music = yield this.musicData.findMusicById(id);
+                if (!music) {
+                    throw new Error(`Música com id ${id} não encontrada.`);
+                }
+                yield this.musicData.updateMusic(id, updates);
+            }
+            catch (error) {
+                throw new Error(error.message || "Erro ao atualizar a música.");
+            }
+        });
+        this.getMusicById = (id, token) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
                 const music = yield this.musicData.findMusicById(id);
                 if (!music || music.length === 0) {
                     throw new Error(`Música com id ${id} não encontrada`);
@@ -26,8 +63,11 @@ class musicBusiness {
                 throw new Error(error.message || "Erro ao buscar a música");
             }
         });
-        this.searchMusicByName = (name) => __awaiter(this, void 0, void 0, function* () {
+        this.searchMusicByName = (name, token) => __awaiter(this, void 0, void 0, function* () {
             try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
                 if (!name) {
                     throw new Error('O parâmetro de busca "name" é obrigatório.');
                 }
@@ -41,8 +81,11 @@ class musicBusiness {
                 throw new Error(error.message || "Erro ao buscar músicas");
             }
         });
-        this.getMusics = () => __awaiter(this, void 0, void 0, function* () {
+        this.getMusics = (token) => __awaiter(this, void 0, void 0, function* () {
             try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
                 const musics = yield this.musicData.getMusics();
                 if (musics.length === 0) {
                     throw new Error("Não há músicas disponíveis no momento.");
@@ -53,9 +96,13 @@ class musicBusiness {
                 throw new Error(error.message || "Erro ao buscar músicas.");
             }
         });
-        this.addMusic = (idmusic, namemusic, genremusic, duration, idalbum) => __awaiter(this, void 0, void 0, function* () {
+        this.addMusic = (namemusic, genremusic, duration, idalbum, token) => __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.musicData.addMusics(idmusic, namemusic, genremusic, duration, idalbum);
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
+                const idmusic = (0, idGenerator_1.generatedId)();
+                yield this.musicData.addMusics(namemusic, genremusic, duration, idalbum);
             }
             catch (error) {
                 throw new Error(error.message || "Erro ao adicionar a música.");

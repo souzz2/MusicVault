@@ -14,21 +14,21 @@ const albumBusiness_1 = require("../business/albumBusiness");
 class AlbumController {
     constructor() {
         this.albumBusiness = new albumBusiness_1.AlbumBusiness();
-        this.addAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.updateAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const { idalbum, namealbum, releasealbum, idartist, idmusic } = req.body;
-                if (!idalbum || !namealbum || !releasealbum || !idartist || !idmusic) {
-                    throw new Error("Todos os campos devem ser preenchidos.");
+                const { id } = req.params;
+                const { namealbum, releasealbum, idartist } = req.body;
+                if (!id) {
+                    throw new Error("O ID do álbum é obrigatório.");
                 }
-                yield this.albumBusiness.addAlbum(idalbum, namealbum, releasealbum, idartist, idmusic);
-                res
-                    .status(201)
-                    .send({ message: `Álbum ${namealbum} inserido com sucesso!` });
+                const token = req.headers.authorization;
+                yield this.albumBusiness.updateAlbum(id, namealbum, releasealbum, idartist, token);
+                res.status(200).send({ message: "Álbum atualizado com sucesso!" });
             }
             catch (error) {
                 res
                     .status(500)
-                    .json({ message: error.message || "Erro ao adicionar álbum", error });
+                    .json({ message: error.message || "Erro ao atualizar álbum", error });
             }
         });
         this.deleteAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -37,7 +37,8 @@ class AlbumController {
                 if (!id) {
                     throw new Error("O id do álbum é obrigatório.");
                 }
-                yield this.albumBusiness.deleteAlbum(id);
+                const token = req.headers.authorization;
+                yield this.albumBusiness.deleteAlbum(id, token);
                 res
                     .status(200)
                     .send({ message: `Álbum com id ${id} deletado com sucesso!` });
@@ -51,7 +52,8 @@ class AlbumController {
         this.getAlbumsMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const musics = yield this.albumBusiness.getAlbumsMusic(id);
+                const token = req.headers.authorization;
+                const musics = yield this.albumBusiness.getAlbumsMusic(id, token);
                 res.status(200).send({ musics });
             }
             catch (error) {
@@ -63,7 +65,8 @@ class AlbumController {
         this.searchAlbumsByName = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const name = req.query.name;
-                const albums = yield this.albumBusiness.searchAlbumsByName(name);
+                const token = req.headers.authorization;
+                const albums = yield this.albumBusiness.searchAlbumsByName(name, token);
                 res.status(200).send({ albums });
             }
             catch (error) {
@@ -73,7 +76,8 @@ class AlbumController {
         });
         this.getAlbums = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const albums = yield this.albumBusiness.getAlbums();
+                const token = req.headers.authorization;
+                const albums = yield this.albumBusiness.getAlbums(token);
                 res.status(200).send({ albums });
             }
             catch (error) {

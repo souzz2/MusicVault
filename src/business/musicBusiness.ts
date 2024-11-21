@@ -4,8 +4,56 @@ import { generatedId } from "../services/idGenerator";
 export class musicBusiness {
   musicData = new musicData();
 
-  getMusicById = async (id: string) => {
+  deleteMusic = async (id: string, token: string) => {
     try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+      if (!id) {
+        throw new Error("O ID da música é obrigatório para exclusão.");
+      }
+
+      const music = await this.musicData.findMusicById(id);
+      if (!music || music.length === 0) {
+        throw new Error(`Música com id ${id} não encontrada.`);
+      }
+
+      await this.musicData.deleteMusic(id);
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao deletar a música.");
+    }
+  };
+
+  updateMusic = async (
+    id: string,
+    token: string,
+    updates: {
+      namemusic?: string;
+      genremusic?: string;
+      duration?: string;
+      idalbum?: string
+    }
+  ) => {
+    try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+      const music = await this.musicData.findMusicById(id);
+      if (!music) {
+        throw new Error(`Música com id ${id} não encontrada.`);
+      }
+
+      await this.musicData.updateMusic(id, updates);
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao atualizar a música.");
+    }
+  };
+
+  getMusicById = async (id: string, token: string) => {
+    try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
       const music = await this.musicData.findMusicById(id);
       if (!music || music.length === 0) {
         throw new Error(`Música com id ${id} não encontrada`);
@@ -16,8 +64,11 @@ export class musicBusiness {
     }
   };
 
-  searchMusicByName = async (name: string) => {
+  searchMusicByName = async (name: string, token: string) => {
     try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
       if (!name) {
         throw new Error('O parâmetro de busca "name" é obrigatório.');
       }
@@ -33,8 +84,11 @@ export class musicBusiness {
     }
   };
 
-  getMusics = async () => {
+  getMusics = async (token: string) => {
     try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
       const musics = await this.musicData.getMusics();
       if (musics.length === 0) {
         throw new Error("Não há músicas disponíveis no momento.");
@@ -49,16 +103,15 @@ export class musicBusiness {
     namemusic: string,
     genremusic: string,
     duration: string,
-    idalbum: string
+    idalbum: string, 
+    token: string
   ) => {
     try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
       const idmusic = generatedId();
-      await this.musicData.addMusics(
-        namemusic,
-        genremusic,
-        duration,
-        idalbum
-      );
+      await this.musicData.addMusics(namemusic, genremusic, duration, idalbum);
     } catch (error: any) {
       throw new Error(error.message || "Erro ao adicionar a música.");
     }
