@@ -16,7 +16,7 @@ export class AlbumController {
       const token = req.headers.authorization as string;
       await this.albumBusiness.updateAlbum(id, namealbum, releasealbum, idartist, token);
   
-      res.status(200).send({ message: "Álbum atualizado com sucesso!" });
+      res.status(200).json({ message: "Álbum atualizado com sucesso!" });
     } catch (error: any) {
       res
         .status(500)
@@ -37,7 +37,7 @@ export class AlbumController {
       await this.albumBusiness.deleteAlbum(id, token);
       res
         .status(200)
-        .send({ message: `Álbum com id ${id} deletado com sucesso!` });
+        .json({ message: `Álbum com id ${id} deletado com sucesso!` });
     } catch (error: any) {
       res
         .status(500)
@@ -63,7 +63,7 @@ export class AlbumController {
       const name = req.query.name as string;
       const token = req.headers.authorization as string;
       const albums = await this.albumBusiness.searchAlbumsByName(name, token);
-      res.status(200).send({ albums });
+      res.status(200).json({ albums });
     } catch (error: any) {
       const message = error.message || "Erro ao buscar álbum";
       res.status(500).json({ message, error });
@@ -74,7 +74,7 @@ export class AlbumController {
     try {
       const token = req.headers.authorization as string;
       const albums = await this.albumBusiness.getAlbums(token);
-      res.status(200).send({ albums });
+      res.status(200).json({ albums });
     } catch (error: any) {
       res
         .status(500)
