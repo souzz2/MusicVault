@@ -32,6 +32,7 @@ Bem-vindo ao MusicVault, uma aplicação robusta e intuitiva para gerenciar álb
    cd musicvault
 
 2. Instale as dependências 
+   ```sh
    npm install
 
 ## Documentação da API
