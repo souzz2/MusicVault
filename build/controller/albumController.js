@@ -19,13 +19,18 @@ class AlbumController {
                 const { namealbum, releasealbum, idartist, musics } = req.body;
                 const token = req.headers.authorization;
                 if (!token) {
-                    throw new Error("Token de autorização é obrigatório.");
+                    throw new Error("Token de autorização não fornecido.");
                 }
-                const result = yield this.albumBusiness.addAlbumWithMusics(namealbum, releasealbum, idartist, musics, token);
-                res.status(201).send({ message: result });
+                if (!namealbum || !releasealbum || !idartist || !musics || musics.length === 0) {
+                    throw new Error("Parâmetros do álbum ou das músicas estão incompletos.");
+                }
+                yield this.albumBusiness.addAlbumWithMusics(namealbum, releasealbum, idartist, musics, token);
+                res.status(201).send({
+                    message: `Álbum "${namealbum}" adicionado com sucesso.`,
+                });
             }
             catch (error) {
-                res.status(500).send({ message: error.message || "Erro ao criar álbum" });
+                res.status(400).send({ error: error.message });
             }
         });
         this.updateAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {

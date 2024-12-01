@@ -24,7 +24,7 @@ class musicController {
                 yield this.musicBusiness.deleteMusic(id, token);
                 res
                     .status(200)
-                    .send({ message: `Música com ID ${id} deletada com sucesso.` });
+                    .json({ message: `Música com ID ${id} deletada com sucesso.` });
             }
             catch (error) {
                 res
@@ -35,8 +35,8 @@ class musicController {
         this.updateMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const { namemusic, genremusic, duration, idalbum } = req.body;
-                if (!id || (!namemusic && !genremusic && !duration && !idalbum)) {
+                const { namemusic, genremusic, duration } = req.body;
+                if (!id || (!namemusic && !genremusic && !duration)) {
                     throw new Error("Parâmetros de atualização inválidos.");
                 }
                 const token = req.headers.authorization;
@@ -44,9 +44,8 @@ class musicController {
                     namemusic,
                     genremusic,
                     duration,
-                    idalbum,
                 });
-                res.status(200).send(`Música com ID ${id} atualizada com sucesso.`);
+                res.status(200).json(`Música com ID ${id} atualizada com sucesso.`);
             }
             catch (error) {
                 res
@@ -60,14 +59,14 @@ class musicController {
                 if (!namemusic || !genremusic || !duration || !idalbum) {
                     throw new Error("Os parâmetros de busca não foram preenchidos corretamente.");
                 }
+                console.log("Dados recebidos:", { namemusic, genremusic, duration, idalbum });
                 const token = req.headers.authorization;
-                yield this.musicBusiness.addMusic(namemusic, genremusic, duration, idalbum, token);
-                res.status(200).send(`Música ${namemusic} adicionada com sucesso!`);
+                yield this.musicBusiness.addMusics(namemusic, genremusic, duration, idalbum, token);
+                res.status(200).json(`Música ${namemusic} adicionada com sucesso!`);
             }
             catch (error) {
-                res
-                    .status(500)
-                    .json({ message: "Erro ao adicionar música", error: error.message });
+                console.error("Erro ao adicionar música:", error.message);
+                res.status(500).json({ message: "Erro ao adicionar música", error: error.message });
             }
         });
         this.getMusicsById = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -124,3 +123,6 @@ class musicController {
     }
 }
 exports.musicController = musicController;
+function generatedId() {
+    throw new Error("Function not implemented.");
+}

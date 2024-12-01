@@ -15,22 +15,22 @@ export class artistData {
   };
 
   addArtist = async (
+    idartist: string,
     nameartist: string,
     bio: string,
     countryartist: string,
-    ageartist: string
+    datebirthartist: Date
   ): Promise<void> => {
     try {
-      const idartist = generatedId();
       await connection("artists").insert({
         idartist,
         nameartist,
         bio,
         countryartist,
-        ageartist,
+        datebirthartist,
       });
-    } catch (sql) {
-      throw sql;
+    } catch (error) {
+      throw new Error("Erro ao adicionar o artista no banco de dados.");
     }
   };
 

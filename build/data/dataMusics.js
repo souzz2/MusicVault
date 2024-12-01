@@ -14,22 +14,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.musicData = void 0;
 const connection_1 = __importDefault(require("../connection"));
-const idGenerator_1 = require("../services/idGenerator");
 class musicData {
     constructor() {
-        this.updateMusicAlbum = (idmusic) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                yield (0, connection_1.default)("musics").where("idmusic", idmusic).update({ idmusic });
-            }
-            catch (error) {
-                if (error instanceof Error) {
-                    throw new Error(error.sqlMessage || "Erro ao atualizar o álbum da música.");
-                }
-                else {
-                    throw new Error("Erro ao atualizar o álbum da música.");
-                }
-            }
-        });
         this.deleteMusic = (id) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield (0, connection_1.default)("musics").where("idmusic", id).del();
@@ -41,49 +27,43 @@ class musicData {
                 throw new Error("Erro ao deletar música no banco de dados.");
             }
         });
-        this.updateMusic = (id, updates) => __awaiter(this, void 0, void 0, function* () {
+        this.updateMusics = (id, updates) => __awaiter(this, void 0, void 0, function* () {
+            console.log(`Atualizando música com id: ${id} com os dados: ${JSON.stringify(updates)}`);
             try {
-                const fields = [];
-                const values = [];
-                if (updates.namemusic) {
-                    fields.push("namemusic = ?");
-                    values.push(updates.namemusic);
-                }
-                if (updates.genremusic) {
-                    fields.push("genremusic = ?");
-                    values.push(updates.genremusic);
-                }
-                if (updates.duration) {
-                    fields.push("duration = ?");
-                    values.push(updates.duration);
-                }
-                if (fields.length === 0) {
-                    throw new Error("Nenhum campo válido para atualizar.");
-                }
-                const query = `
-        UPDATE musics
-        SET ${fields.join(", ")}
-        WHERE idmusic = ?;
-      `;
-                values.push(id);
-                yield connection_1.default.raw(query, values);
+                yield (0, connection_1.default)("musics").where("idmusic", id).update(updates);
             }
             catch (error) {
+                if (error instanceof Error) {
+                    console.error(`Erro ao atualizar música no banco de dados: ${error.message}`);
+                }
+                else {
+                    console.error("Erro ao atualizar música no banco de dados: erro desconhecido.");
+                }
                 throw new Error("Erro ao atualizar música no banco de dados.");
             }
         });
-        this.addMusics = (namemusic, genremusic, duration) => __awaiter(this, void 0, void 0, function* () {
+        this.checkAlbumExists = (idalbum) => __awaiter(this, void 0, void 0, function* () {
+            const album = yield (0, connection_1.default)("albuns").where("idalbum", idalbum).first();
+            return !!album;
+        });
+        this.addMusicsData = (idmusic, namemusic, genremusic, duration, idalbum) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const idmusic = (0, idGenerator_1.generatedId)();
                 yield (0, connection_1.default)("musics").insert({
                     idmusic,
                     namemusic,
                     genremusic,
                     duration,
+                    idalbum,
                 });
             }
-            catch (sql) {
-                throw sql;
+            catch (error) {
+                if (error instanceof Error) {
+                    console.error("Erro ao inserir música:", error.message);
+                }
+                else {
+                    console.error("Erro ao inserir música:", error);
+                }
+                throw new Error("Erro ao adicionar música no banco de dados.");
             }
         });
         this.findMusicById = (id) => __awaiter(this, void 0, void 0, function* () {
@@ -100,11 +80,7 @@ class musicData {
         this.searchMusicByName = (name) => __awaiter(this, void 0, void 0, function* () {
             console.log(`Buscando músicas com o nome: ${name}`);
             try {
-                return yield (0, connection_1.default)("musics")
-                    .select("namemusic")
-                    .where("namemusic", "ilike", `%${name}%`)
-                    .orderBy("namemusic", "asc")
-                    .limit(5);
+                return yield (0, connection_1.default)("musics").where("namemusic", "ilike", `%${name}%`);
             }
             catch (sql) {
                 throw sql;

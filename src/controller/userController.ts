@@ -24,7 +24,7 @@ export class UserController {
       }
 
       const token = await this.UserBusiness.signupUser({ nickname, emailuser, password });
-      res.status(201).send(token);
+      res.status(201).json(token);
     } catch (error: any) {
       res.status(400).json({
         message: "Erro ao se registrar",

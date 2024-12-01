@@ -20,27 +20,33 @@ class AlbumBusiness {
         this.addAlbumWithMusics = (namealbum, releasealbum, idartist, musics, token) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
-                    throw new Error("Token não informado");
+                    throw new Error("Token não informado.");
                 }
                 if (!namealbum || !releasealbum || !idartist || musics.length === 0) {
                     throw new Error("Os parâmetros do álbum ou das músicas não foram preenchidos corretamente.");
                 }
                 const idalbum = (0, idGenerator_1.generatedId)();
-                yield this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, []);
-                for (const music of musics) {
+                yield this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, [token]);
+                yield Promise.all(musics.map((music) => __awaiter(this, void 0, void 0, function* () {
+                    console.log(`Procurando música: ${music.namemusic}`);
                     const existingMusic = yield this.musicData.searchMusicByName(music.namemusic, token);
-                    console.log(`Resultado da busca: ${JSON.stringify(existingMusic)}`);
-                    if (existingMusic.length === 0) {
-                        yield this.musicData.addMusic(music.namemusic, music.genremusic, music.duration, token);
+                    if (!existingMusic || existingMusic.length === 0) {
+                        console.log(`Música não encontrada. Adicionando: ${music.namemusic}`);
+                        const idmusic = (0, idGenerator_1.generatedId)();
+                        yield this.musicData.addMusics(idmusic, music.namemusic, music.genremusic, music.duration, idalbum);
+                        console.log(`Música "${music.namemusic}" adicionada com sucesso com id ${idmusic}.`);
                     }
                     else {
-                        console.log(`Música encontrada, atualizando: ${music.namemusic}`);
-                        yield this.musicData.updateMusic(existingMusic[0].idmusic, token, {});
+                        console.log(`Música "${music.namemusic}" encontrada. Atualizando associação com o álbum.`);
+                        yield this.musicData.updateMusic(existingMusic[0].idmusic, token, {
+                            idalbum,
+                        });
                     }
-                }
+                })));
                 return `Álbum "${namealbum}" adicionado com sucesso com as músicas associadas.`;
             }
             catch (error) {
+                console.error("Erro ao adicionar álbum e músicas:", error.message);
                 throw new Error(error.message || "Erro ao adicionar o álbum e as músicas.");
             }
         });

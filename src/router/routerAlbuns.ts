@@ -9,5 +9,4 @@ albumRouter.post("/", albumController.addAlbumWithMusics);
 albumRouter.put("/:id", albumController.updateAlbum);
 albumRouter.delete("/:id", albumController.deleteAlbum);
 albumRouter.get("/", albumController.getAlbums);
-albumRouter.get("/:id", albumController.getAlbumsMusic);
 albumRouter.get("/search", albumController.searchAlbumsByName);

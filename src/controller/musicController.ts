@@ -33,7 +33,7 @@ export class musicController {
         throw new Error("Parâmetros de atualização inválidos.");
       }
       const token = req.headers.authorization as string;
-      await this.musicBusiness.updateMusic(id,token, {
+      await this.musicBusiness.updateMusic(id, token, {
         namemusic,
         genremusic,
         duration,
@@ -46,9 +46,10 @@ export class musicController {
     }
   };
 
-  postMusics = async (req: Request, res: Response) => {
+  postMusic = async (req: Request, res: Response) => {
     try {
       const { namemusic, genremusic, duration } = req.body;
+
       if (!namemusic || !genremusic || !duration) {
         throw new Error(
           "Os parâmetros de busca não foram preenchidos corretamente."
@@ -69,11 +70,36 @@ export class musicController {
     }
   };
 
+  postMusicsWithAlbums = async (req: Request, res: Response) => {
+    try {
+      const { namemusic, genremusic, duration, idalbum } = req.body;
+
+      if (!namemusic || !genremusic || !duration || !idalbum) {
+        throw new Error(
+          "Os parâmetros de busca não foram preenchidos corretamente."
+        );
+      }
+      const token = req.headers.authorization as string;
+      await this.musicBusiness.addMusicsWithAlbuns(
+        namemusic,
+        genremusic,
+        duration,
+        idalbum,
+        token
+      );
+      res.status(200).json(`Música ${namemusic} adicionada com sucesso!`);
+    } catch (error: any) {
+      res
+        .status(500)
+        .json({ message: "Erro ao adicionar música", error: error.message });
+    }
+  };
+
   getMusicsById = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const token = req.headers.authorization as string;
-      const music = await this.musicBusiness.getMusicById(id,token);
+      const music = await this.musicBusiness.getMusicById(id, token);
 
       if (!music) {
         throw new Error(`Música com id ${id} não encontrada`);
@@ -94,7 +120,7 @@ export class musicController {
         throw new Error('O parâmetro de busca "name" é obrigatório.');
       }
       const token = req.headers.authorization as string;
-      const musics = await this.musicBusiness.searchMusicByName(name,token);
+      const musics = await this.musicBusiness.searchMusicByName(name, token);
       if (!musics || musics.length === 0) {
         throw new Error("Nenhuma música foi encontrada.");
       }
@@ -110,7 +136,10 @@ export class musicController {
   getMusics = async (req: Request, res: Response) => {
     try {
       const token = req.headers.authorization as string;
-      const musics = await this.musicBusiness.getMusics(token);
+      const limit = parseInt(req.query.limit as string) || 10;
+      const page = parseInt(req.query.page as string) || 1;
+      const offset = (page - 1) * limit;
+      const musics = await this.musicBusiness.getMusics(token, limit, offset);
       if (!musics.length) {
         throw new Error("Não há músicas disponíveis no momento.");
       }
@@ -123,3 +152,4 @@ export class musicController {
     }
   };
 }
+

@@ -15,7 +15,7 @@ const idGenerator_1 = require("../services/idGenerator");
 class artistBusiness {
     constructor() {
         this.artistData = new dataArtists_1.artistData();
-        this.addMusic = (nameartist, bio, countryartist, ageartist, token) => __awaiter(this, void 0, void 0, function* () {
+        this.addArtist = (nameartist, bio, countryartist, ageartist, token) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
                     throw new Error("Token não informado");

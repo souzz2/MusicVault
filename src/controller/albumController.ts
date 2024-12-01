@@ -5,15 +5,20 @@ import { generatedId } from "../services/idGenerator";
 export class AlbumController {
   albumBusiness = new AlbumBusiness();
 
-  addAlbumWithMusics = async (req: Request, res: Response) => {
+  addAlbumWithMusics = async (req: Request, res: Response): Promise<void> => {
     try {
       const { namealbum, releasealbum, idartist, musics } = req.body;
-      const token = req.headers.authorization as string;
+      const token = req.headers.authorization;
+  
       if (!token) {
-        throw new Error("Token de autorização é obrigatório.");
+        throw new Error("Token de autorização não fornecido.");
       }
   
-      const result = await this.albumBusiness.addAlbumWithMusics(
+      if (!namealbum || !releasealbum || !idartist || !musics || musics.length === 0) {
+        throw new Error("Parâmetros do álbum ou das músicas estão incompletos.");
+      }
+  
+      await this.albumBusiness.addAlbumWithMusics(
         namealbum,
         releasealbum,
         idartist,
@@ -21,11 +26,14 @@ export class AlbumController {
         token
       );
   
-      res.status(201).send({ message: result });
+      res.status(201).send({
+        message: `Álbum "${namealbum}" adicionado com sucesso.`,
+      });
     } catch (error: any) {
-      res.status(500).send({ message: error.message || "Erro ao criar álbum" });
+      res.status(400).send({ error: error.message });
     }
   };
+  
   
 
 
@@ -69,18 +77,6 @@ export class AlbumController {
     }
   };
 
-  getAlbumsMusic = async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      const token = req.headers.authorization as string;
-      const musics = await this.albumBusiness.getAlbumsMusic(id, token);
-      res.status(200).send({ musics });
-    } catch (error: any) {
-      res
-        .status(500)
-        .json({ message: error.message || "Erro ao buscar o álbum", error });
-    }
-  };
 
   searchAlbumsByName = async (req: Request, res: Response) => {
     try {

@@ -4,7 +4,7 @@ import { musicBusiness } from "./musicBusiness"; // Importar a classe musicBusin
 
 export class AlbumBusiness {
   albumData = new albumData();
-  musicData = new musicBusiness();
+  musicBusiness = new musicBusiness();
 
   addAlbumWithMusics = async (
     namealbum: string,
@@ -12,47 +12,48 @@ export class AlbumBusiness {
     idartist: string,
     musics: { namemusic: string; genremusic: string; duration: string }[],
     token: string
-  ) => {
+  ): Promise<string> => {
     try {
       if (!token) {
-        throw new Error("Token não informado");
+        throw new Error("Token não informado.");
       }
+
       if (!namealbum || !releasealbum || !idartist || musics.length === 0) {
         throw new Error(
           "Os parâmetros do álbum ou das músicas não foram preenchidos corretamente."
         );
       }
+
       const idalbum = generatedId();
 
-      await this.albumData.addAlbum(
-        idalbum,
-        namealbum,
-        releasealbum,
-        idartist,
-        []
-      );
+      await this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist);
 
-      for (const music of musics) {
-        console.log(`Procurando música: ${music.namemusic}`);
-        const existingMusic = await this.musicData.searchMusicByName(
-          music.namemusic,
-          token
-        );
-
-        console.log(`Resultado da busca: ${JSON.stringify(existingMusic)}`);
-
-        if (existingMusic.length === 0) {
-          console.log(`Música não encontrada, adicionando: ${music.namemusic}`);
-          await this.musicData.addMusic(
+      await Promise.all(
+        musics.map(async (music) => {
+          const existingMusic = await this.musicBusiness.searchMusicByName(
             music.namemusic,
-            music.genremusic,
-            music.duration,
             token
           );
-        } else {
-          console.log(`Música encontrada: ${music.namemusic}`);
-        }
-      }
+
+          if (!existingMusic || existingMusic.length === 0) {
+            await this.musicBusiness.addMusicsWithAlbuns(
+              music.namemusic,
+              music.genremusic,
+              music.duration,
+              idalbum,
+              token
+            );
+            console.log(existingMusic);
+            await this.musicBusiness.updateMusic(
+              existingMusic[0].idmusic,
+              token,
+              {
+                idalbum,
+              }
+            );
+          }
+        })
+      );
 
       return `Álbum "${namealbum}" adicionado com sucesso com as músicas associadas.`;
     } catch (error: any) {
@@ -107,26 +108,6 @@ export class AlbumBusiness {
       await this.albumData.deleteAlbum(id);
     } catch (error: any) {
       throw new Error(error.message || "Erro ao deletar álbum");
-    }
-  };
-
-  getAlbumsMusic = async (id: string, token: string) => {
-    try {
-      if (!token) {
-        throw new Error("Token não informado");
-      }
-      if (!id) {
-        throw new Error("É necessário preencher o parâmetro id");
-      }
-
-      const AlbunsMusics = await this.albumData.getAlbumsMusicData(id);
-      if (!AlbunsMusics || AlbunsMusics.length === 0) {
-        throw new Error("Álbum não encontrado");
-      }
-
-      return AlbunsMusics;
-    } catch (error) {
-      throw new Error("Erro ao buscar as músicas do álbum");
     }
   };
 

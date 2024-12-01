@@ -3,19 +3,25 @@ import { generatedId } from "../services/idGenerator";
 export class artistBusiness {
   artistData = new artistData();
 
-  addMusic = async (
+  addArtist = async (
     nameartist: string,
     bio: string,
     countryartist: string,
-    ageartist: string, 
+    datebirthartist: Date,
     token: string
   ) => {
     try {
       if (!token) {
         throw new Error("Token não informado");
       }
-      const idmusic = generatedId();
-      await this.artistData.addArtist(nameartist, bio, countryartist, ageartist);
+      const idartist = generatedId();
+      await this.artistData.addArtist(
+        idartist,
+        nameartist,
+        bio,
+        countryartist,
+        datebirthartist
+      );
     } catch (error: any) {
       throw new Error(error.message || "Erro ao adicionar o artista.");
     }

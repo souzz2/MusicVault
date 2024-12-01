@@ -30,7 +30,8 @@ export class musicBusiness {
     updates: {
       namemusic?: string;
       genremusic?: string;
-      duration?: string
+      duration?: string;
+      idalbum?: string;
     }
   ) => {
     try {
@@ -42,9 +43,95 @@ export class musicBusiness {
         throw new Error(`Música com id ${id} não encontrada.`);
       }
 
-      await this.musicData.updateMusic(id, updates);
+      await this.musicData.updateMusics(id, updates);
     } catch (error: any) {
       throw new Error(error.message || "Erro ao atualizar a música.");
+    }
+  };
+
+  addMusic = async (
+    namemusic: string,
+    genremusic: string,
+    duration: string,
+    token: string
+  ): Promise<string> => {
+    try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+
+      if (!namemusic || !genremusic || !duration ) {
+        throw new Error("Todos os campos da música são obrigatórios.");
+      }
+
+      const idmusic = generatedId();
+
+      await this.musicData.addMusicsData(
+        idmusic,
+        namemusic,
+        genremusic,
+        duration
+      );
+      return idmusic;
+    } catch (error: any) {
+      throw new Error(
+        error.message || "Erro ao adicionar música no banco de dados."
+      );
+    }
+  };
+
+  addMusicsWithAlbuns = async (
+    namemusic: string,
+    genremusic: string,
+    duration: string,
+    idalbum: string,
+    token: string
+  ): Promise<string> => {
+    try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+
+      if (!namemusic || !genremusic || !duration || !idalbum) {
+        throw new Error("Todos os campos da música são obrigatórios.");
+      }
+
+      const idmusic = generatedId();
+
+      const albumExists = await this.musicData.checkAlbumExists(idalbum);
+      if (!albumExists) {
+        throw new Error(`Álbum com id ${idalbum} não encontrado.`);
+      }
+
+      await this.musicData.addMusicsData(
+        idmusic,
+        namemusic,
+        genremusic,
+        duration,
+        idalbum
+      );
+      return idmusic;
+    } catch (error: any) {
+      throw new Error(
+        error.message || "Erro ao adicionar música no banco de dados."
+      );
+    }
+  };
+
+  searchMusicByName = async (name: string, token: string) => {
+    try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+      if (!name) {
+        throw new Error('O parâmetro de busca "name" é obrigatório.');
+      }
+
+      const musics = await this.musicData.searchMusicByName(name);
+
+      return musics || [];
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao buscar músicas.");
     }
   };
 
@@ -62,33 +149,12 @@ export class musicBusiness {
       throw new Error(error.message || "Erro ao buscar a música");
     }
   };
-
-  searchMusicByName = async (name: string, token: string) => {
+  getMusics = async (token: string,limit: number, offset: number) => {
     try {
       if (!token) {
         throw new Error("Token não informado");
       }
-      if (!name) {
-        throw new Error('O parâmetro de busca "name" é obrigatório.');
-      }
-
-      const musics = await this.musicData.searchMusicByName(name);
-      if (!musics || musics.length === 0) {
-        throw new Error("Nenhuma música foi encontrada.");
-      }
-
-      return musics;
-    } catch (error: any) {
-      throw new Error(error.message || "Erro ao buscar músicas");
-    }
-  };
-
-  getMusics = async (token: string) => {
-    try {
-      if (!token) {
-        throw new Error("Token não informado");
-      }
-      const musics = await this.musicData.getMusics();
+      const musics = await this.musicData.getMusics(limit, offset);
       if (musics.length === 0) {
         throw new Error("Não há músicas disponíveis no momento.");
       }
@@ -96,18 +162,5 @@ export class musicBusiness {
     } catch (error: any) {
       throw new Error(error.message || "Erro ao buscar músicas.");
     }
-  };
-
-  addMusic = async (
-    namemusic: string,
-    genremusic: string,
-    duration: string,
-    token: string
-  ) => {
-    if (!token) {
-      throw new Error("Token não informado");
-    }
-    const idmusic = generatedId();
-    await this.musicData.addMusics(namemusic, genremusic, duration);
   };
 }

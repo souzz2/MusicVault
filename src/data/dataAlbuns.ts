@@ -28,8 +28,7 @@ export class albumData {
     idalbum: string,
     namealbum: string,
     releasealbum: string,
-    idartist: string,
-    idmusic: string[]
+    idartist: string
   ) => {
     try {
       return await connection("albuns").insert({
@@ -43,18 +42,6 @@ export class albumData {
     }
   };
 
-
-  getAlbumsMusicData = async (id: string): Promise<any> => {
-    try {
-      return await connection("albuns")
-        .innerJoin("musics", "musics.idalbum", "=", "albuns.idalbum")
-        .select("musics.namemusic")
-        .where("albuns.idalbum", "=", id)
-        .orderBy("musics.idmusic", "asc");
-    } catch (sql) {
-      throw sql;
-    }
-  };
 
   getAlbumsByNameData = async (name: string): Promise<any> => {
     try {
