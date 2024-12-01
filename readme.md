@@ -1,6 +1,6 @@
 # MusicVault
 
-MusicVault é uma aplicação para gerenciar álbuns e músicas. A aplicação permite adicionar, atualizar, buscar e deletar álbuns e músicas, além de associar músicas a álbuns.
+Bem-vindo ao MusicVault, uma aplicação robusta e intuitiva para gerenciar álbuns e músicas. Com o MusicVault, você pode facilmente adicionar, atualizar, buscar e deletar álbuns e músicas, além de associar músicas a álbuns. Esta aplicação foi projetada para oferecer uma experiência de gerenciamento de música eficiente e organizada, ideal para artistas, produtores musicais e entusiastas da música.
 
 ## Funcionalidades
 
@@ -30,3 +30,9 @@ MusicVault é uma aplicação para gerenciar álbuns e músicas. A aplicação p
    ```sh
    git clone https://github.com/seu-usuario/musicvault.git
    cd musicvault
+
+2. Instale as dependências 
+   npm install
+
+## Documentação da API
+   A documentação completa da API pode ser encontrada no link
