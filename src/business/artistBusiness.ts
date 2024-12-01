@@ -1,6 +1,8 @@
 import { artistData } from "../data/dataArtists";
 export class artistBusiness {
   artistData = new artistData();
+
+  
   getArtistsMusic = async (id: string) => {
     try {
       const artist = await this.artistData.getArtistByIdData(id);

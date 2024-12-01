@@ -5,6 +5,30 @@ import { generatedId } from "../services/idGenerator";
 export class AlbumController {
   albumBusiness = new AlbumBusiness();
 
+  addAlbumWithMusics = async (req: Request, res: Response) => {
+    try {
+      const { namealbum, releasealbum, idartist, musics } = req.body;
+      const token = req.headers.authorization as string;
+      if (!token) {
+        throw new Error("Token de autorização é obrigatório.");
+      }
+  
+      const result = await this.albumBusiness.addAlbumWithMusics(
+        namealbum,
+        releasealbum,
+        idartist,
+        musics,
+        token
+      );
+  
+      res.status(201).send({ message: result });
+    } catch (error: any) {
+      res.status(500).send({ message: error.message || "Erro ao criar álbum" });
+    }
+  };
+  
+
+
   updateAlbum = async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;

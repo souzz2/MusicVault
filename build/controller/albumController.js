@@ -14,6 +14,20 @@ const albumBusiness_1 = require("../business/albumBusiness");
 class AlbumController {
     constructor() {
         this.albumBusiness = new albumBusiness_1.AlbumBusiness();
+        this.addAlbumWithMusics = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { namealbum, releasealbum, idartist, musics } = req.body;
+                const token = req.headers.authorization;
+                if (!token) {
+                    throw new Error("Token de autorização é obrigatório.");
+                }
+                const result = yield this.albumBusiness.addAlbumWithMusics(namealbum, releasealbum, idartist, musics, token);
+                res.status(201).send({ message: result });
+            }
+            catch (error) {
+                res.status(500).send({ message: error.message || "Erro ao criar álbum" });
+            }
+        });
         this.updateAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
@@ -23,7 +37,7 @@ class AlbumController {
                 }
                 const token = req.headers.authorization;
                 yield this.albumBusiness.updateAlbum(id, namealbum, releasealbum, idartist, token);
-                res.status(200).send({ message: "Álbum atualizado com sucesso!" });
+                res.status(200).json({ message: "Álbum atualizado com sucesso!" });
             }
             catch (error) {
                 res
@@ -41,7 +55,7 @@ class AlbumController {
                 yield this.albumBusiness.deleteAlbum(id, token);
                 res
                     .status(200)
-                    .send({ message: `Álbum com id ${id} deletado com sucesso!` });
+                    .json({ message: `Álbum com id ${id} deletado com sucesso!` });
             }
             catch (error) {
                 res
@@ -67,7 +81,7 @@ class AlbumController {
                 const name = req.query.name;
                 const token = req.headers.authorization;
                 const albums = yield this.albumBusiness.searchAlbumsByName(name, token);
-                res.status(200).send({ albums });
+                res.status(200).json({ albums });
             }
             catch (error) {
                 const message = error.message || "Erro ao buscar álbum";
@@ -78,7 +92,7 @@ class AlbumController {
             try {
                 const token = req.headers.authorization;
                 const albums = yield this.albumBusiness.getAlbums(token);
-                res.status(200).send({ albums });
+                res.status(200).json({ albums });
             }
             catch (error) {
                 res

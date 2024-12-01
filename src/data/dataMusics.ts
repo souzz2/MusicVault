@@ -3,6 +3,21 @@ import { music } from "../types/typesMusics";
 import { generatedId } from "../services/idGenerator";
 
 export class musicData {
+
+
+  updateMusicAlbum = async (idmusic: string, idalbum: string): Promise<void> => {
+    try {
+      await connection("musics").where("idmusic", idmusic).update({ idalbum });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error((error as any).sqlMessage || "Erro ao atualizar o álbum da música.");
+      } else {
+        throw new Error("Erro ao atualizar o álbum da música.");
+      }
+    }
+  };
+
+  
   deleteMusic = async (id: string): Promise<void> => {
     try {
       const result = await connection("musics").where("idmusic", id).del();
@@ -93,10 +108,11 @@ export class musicData {
   };
 
   searchMusicByName = async (name: string): Promise<music[]> => {
+    console.log(`Buscando músicas com o nome: ${name}`);  // Log para depuraçã
     try {
       return await connection("musics")
         .select("namemusic")
-        .where("namemusic", "like", `%${name}%`)
+        .where("namemusic", "ilike", `%${name}%`)
         .orderBy("namemusic", "asc")
         .limit(5);
     } catch (sql) {

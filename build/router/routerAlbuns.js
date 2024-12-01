@@ -8,6 +8,7 @@ const express_1 = __importDefault(require("express"));
 const albumController_1 = require("../controller/albumController");
 exports.albumRouter = express_1.default.Router();
 const albumController = new albumController_1.AlbumController();
+exports.albumRouter.post("/", albumController.addAlbumWithMusics);
 exports.albumRouter.put("/:id", albumController.updateAlbum);
 exports.albumRouter.delete("/:id", albumController.deleteAlbum);
 exports.albumRouter.get("/", albumController.getAlbums);

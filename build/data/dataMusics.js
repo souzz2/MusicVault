@@ -17,6 +17,19 @@ const connection_1 = __importDefault(require("../connection"));
 const idGenerator_1 = require("../services/idGenerator");
 class musicData {
     constructor() {
+        this.updateMusicAlbum = (idmusic, idalbum) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield (0, connection_1.default)("musics").where("idmusic", idmusic).update({ idalbum });
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    throw new Error(error.sqlMessage || "Erro ao atualizar o álbum da música.");
+                }
+                else {
+                    throw new Error("Erro ao atualizar o álbum da música.");
+                }
+            }
+        });
         this.deleteMusic = (id) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield (0, connection_1.default)("musics").where("idmusic", id).del();
@@ -90,10 +103,11 @@ class musicData {
             }
         });
         this.searchMusicByName = (name) => __awaiter(this, void 0, void 0, function* () {
+            console.log(`Buscando músicas com o nome: ${name}`);
             try {
                 return yield (0, connection_1.default)("musics")
                     .select("namemusic")
-                    .where("namemusic", "like", `%${name}%`)
+                    .where("namemusic", "ilike", `%${name}%`)
                     .orderBy("namemusic", "asc")
                     .limit(5);
             }

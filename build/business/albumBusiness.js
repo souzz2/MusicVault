@@ -11,9 +11,49 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AlbumBusiness = void 0;
 const dataAlbuns_1 = require("../data/dataAlbuns");
+const idGenerator_1 = require("../services/idGenerator");
+const musicBusiness_1 = require("./musicBusiness");
 class AlbumBusiness {
     constructor() {
         this.albumData = new dataAlbuns_1.albumData();
+        this.musicData = new musicBusiness_1.musicBusiness();
+    }
+}
+exports.AlbumBusiness = AlbumBusiness;
+class AlbumBusiness {
+    constructor() {
+        this.albumData = new dataAlbuns_1.albumData();
+        this.musicData = new musicBusiness_1.musicBusiness();
+        this.addAlbumWithMusics = (namealbum, releasealbum, idartist, musics, token) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
+                if (!namealbum || !releasealbum || !idartist || musics.length === 0) {
+                    throw new Error("Os parâmetros do álbum ou das músicas não foram preenchidos corretamente.");
+                }
+                const idalbum = (0, idGenerator_1.generatedId)();
+                yield this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, []);
+                for (const music of musics) {
+                    console.log(`Procurando música: ${music.namemusic}`);
+                    const existingMusic = yield this.musicData.searchMusicByName(music.namemusic, token);
+                    if (existingMusic.length === 0) {
+                        console.log(`Música não encontrada, adicionando: ${music.namemusic}`);
+                        yield this.musicData.addMusic(music.namemusic, music.genremusic, music.duration, idalbum, token);
+                    }
+                    else {
+                        console.log(`Música encontrada, atualizando: ${music.namemusic}`);
+                        yield this.musicData.updateMusic(existingMusic[0].idmusic, token, {
+                            idalbum,
+                        });
+                    }
+                }
+                return `Álbum "${namealbum}" adicionado com sucesso com as músicas associadas.`;
+            }
+            catch (error) {
+                throw new Error(error.message || "Erro ao adicionar o álbum e as músicas.");
+            }
+        });
         this.updateAlbum = (id, token, namealbum, releasealbum, idartist) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
