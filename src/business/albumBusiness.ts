@@ -4,7 +4,7 @@ import { musicBusiness } from "./musicBusiness"; // Importar a classe musicBusin
 
 export class AlbumBusiness {
   albumData = new albumData();
-  musicData = new musicBusiness(); 
+  musicData = new musicBusiness();
 
   addAlbumWithMusics = async (
     namealbum: string,
@@ -33,6 +33,7 @@ export class AlbumBusiness {
       );
 
       for (const music of musics) {
+        console.log(`Procurando música: ${music.namemusic}`);
         const existingMusic = await this.musicData.searchMusicByName(
           music.namemusic,
           token
@@ -41,18 +42,15 @@ export class AlbumBusiness {
         console.log(`Resultado da busca: ${JSON.stringify(existingMusic)}`);
 
         if (existingMusic.length === 0) {
+          console.log(`Música não encontrada, adicionando: ${music.namemusic}`);
           await this.musicData.addMusic(
             music.namemusic,
             music.genremusic,
             music.duration,
-            idalbum,
             token
           );
         } else {
-          console.log(`Música encontrada, atualizando: ${music.namemusic}`);
-          await this.musicData.updateMusic(existingMusic[0].idmusic, token, {
-            idalbum,
-          });
+          console.log(`Música encontrada: ${music.namemusic}`);
         }
       }
 
@@ -63,7 +61,6 @@ export class AlbumBusiness {
       );
     }
   };
-
 
   updateAlbum = async (
     id: string,

@@ -5,9 +5,9 @@ import { generatedId } from "../services/idGenerator";
 export class musicData {
 
 
-  updateMusicAlbum = async (idmusic: string, idalbum: string): Promise<void> => {
+  updateMusicAlbum = async (idmusic: string): Promise<void> => {
     try {
-      await connection("musics").where("idmusic", idmusic).update({ idalbum });
+      await connection("musics").where("idmusic", idmusic).update({idmusic});
     } catch (error) {
       if (error instanceof Error) {
         throw new Error((error as any).sqlMessage || "Erro ao atualizar o álbum da música.");
@@ -35,7 +35,6 @@ export class musicData {
       namemusic?: string;
       genremusic?: string;
       duration?: string;
-      idalbum?: string;
     }
   ): Promise<void> => {
     try {
@@ -53,10 +52,6 @@ export class musicData {
       if (updates.duration) {
         fields.push("duration = ?");
         values.push(updates.duration);
-      }
-      if (updates.idalbum) {
-        fields.push("idalbum = ?");
-        values.push(updates.idalbum);
       }
 
       if (fields.length === 0) {
@@ -77,22 +72,20 @@ export class musicData {
   };
 
   addMusics = async (
+    idmusic: string,
     namemusic: string,
     genremusic: string,
-    duration: string,
-    idalbum: string
+    duration: string
   ): Promise<void> => {
     try {
-      const idmusic = generatedId();
       await connection("musics").insert({
         idmusic,
         namemusic,
         genremusic,
-        duration,
-        idalbum,
+        duration
       });
-    } catch (sql) {
-      throw sql;
+    } catch (error) {
+      throw new Error("Erro ao adicionar música no banco de dados.");
     }
   };
 
@@ -111,10 +104,7 @@ export class musicData {
     console.log(`Buscando músicas com o nome: ${name}`);  // Log para depuraçã
     try {
       return await connection("musics")
-        .select("namemusic")
         .where("namemusic", "ilike", `%${name}%`)
-        .orderBy("namemusic", "asc")
-        .limit(5);
     } catch (sql) {
       throw sql;
     }

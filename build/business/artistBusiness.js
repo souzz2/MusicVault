@@ -11,9 +11,40 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.artistBusiness = void 0;
 const dataArtists_1 = require("../data/dataArtists");
+const idGenerator_1 = require("../services/idGenerator");
 class artistBusiness {
     constructor() {
         this.artistData = new dataArtists_1.artistData();
+        this.addMusic = (nameartist, bio, countryartist, ageartist, token) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
+                const idmusic = (0, idGenerator_1.generatedId)();
+                yield this.artistData.addArtist(nameartist, bio, countryartist, ageartist);
+            }
+            catch (error) {
+                throw new Error(error.message || "Erro ao adicionar o artista.");
+            }
+        });
+        this.deleteArtist = (id, token) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
+                if (!id) {
+                    throw new Error("O ID do artista é obrigatório para exclusão.");
+                }
+                const music = yield this.artistData.getArtistByIdData(id);
+                if (!music || music.length === 0) {
+                    throw new Error(`Artista com id ${id} não encontrado.`);
+                }
+                yield this.artistData.deleteArtist(id);
+            }
+            catch (error) {
+                throw new Error(error.message || "Erro ao deletar o artista.");
+            }
+        });
         this.getArtistsMusic = (id) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const artist = yield this.artistData.getArtistByIdData(id);

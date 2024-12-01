@@ -16,7 +16,7 @@ export class musicController {
 
       res
         .status(200)
-        .send({ message: `Música com ID ${id} deletada com sucesso.` });
+        .json({ message: `Música com ID ${id} deletada com sucesso.` });
     } catch (error: any) {
       res
         .status(500)
@@ -27,9 +27,9 @@ export class musicController {
   updateMusic = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { namemusic, genremusic, duration, idalbum } = req.body;
+      const { namemusic, genremusic, duration } = req.body;
 
-      if (!id || (!namemusic && !genremusic && !duration && !idalbum)) {
+      if (!id || (!namemusic && !genremusic && !duration)) {
         throw new Error("Parâmetros de atualização inválidos.");
       }
       const token = req.headers.authorization as string;
@@ -37,9 +37,8 @@ export class musicController {
         namemusic,
         genremusic,
         duration,
-        idalbum,
       });
-      res.status(200).send(`Música com ID ${id} atualizada com sucesso.`);
+      res.status(200).json(`Música com ID ${id} atualizada com sucesso.`);
     } catch (error: any) {
       res
         .status(500)
@@ -49,8 +48,8 @@ export class musicController {
 
   postMusics = async (req: Request, res: Response) => {
     try {
-      const { namemusic, genremusic, duration, idalbum } = req.body;
-      if (!namemusic || !genremusic || !duration || !idalbum) {
+      const { namemusic, genremusic, duration } = req.body;
+      if (!namemusic || !genremusic || !duration) {
         throw new Error(
           "Os parâmetros de busca não foram preenchidos corretamente."
         );
@@ -60,10 +59,9 @@ export class musicController {
         namemusic,
         genremusic,
         duration,
-        idalbum,
         token
       );
-      res.status(200).send(`Música ${namemusic} adicionada com sucesso!`);
+      res.status(200).json(`Música ${namemusic} adicionada com sucesso!`);
     } catch (error: any) {
       res
         .status(500)

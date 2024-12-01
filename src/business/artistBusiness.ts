@@ -1,8 +1,46 @@
 import { artistData } from "../data/dataArtists";
+import { generatedId } from "../services/idGenerator";
 export class artistBusiness {
   artistData = new artistData();
 
-  
+  addMusic = async (
+    nameartist: string,
+    bio: string,
+    countryartist: string,
+    ageartist: string, 
+    token: string
+  ) => {
+    try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+      const idmusic = generatedId();
+      await this.artistData.addArtist(nameartist, bio, countryartist, ageartist);
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao adicionar o artista.");
+    }
+  };
+
+  deleteArtist = async (id: string, token: string) => {
+    try {
+      if (!token) {
+        throw new Error("Token não informado");
+      }
+      if (!id) {
+        throw new Error("O ID do artista é obrigatório para exclusão.");
+      }
+
+      const music = await this.artistData.getArtistByIdData(id);
+      if (!music || music.length === 0) {
+        throw new Error(`Artista com id ${id} não encontrado.`);
+      }
+
+      await this.artistData.deleteArtist(id);
+    } catch (error: any) {
+      throw new Error(error.message || "Erro ao deletar o artista.");
+    }
+  };
+
   getArtistsMusic = async (id: string) => {
     try {
       const artist = await this.artistData.getArtistByIdData(id);

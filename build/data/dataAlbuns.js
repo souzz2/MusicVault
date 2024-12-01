@@ -16,6 +16,17 @@ exports.albumData = void 0;
 const connection_1 = __importDefault(require("../connection"));
 class albumData {
     constructor() {
+        this.deleteAlbum = (id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield (0, connection_1.default)("albuns").where("idalbum", id).del();
+                if (result === 0) {
+                    throw new Error(`Album com id ${id} não encontrado.`);
+                }
+            }
+            catch (error) {
+                throw new Error("Erro ao deletar o álbum no banco de dados.");
+            }
+        });
         this.updateAlbum = (id, updates) => __awaiter(this, void 0, void 0, function* () {
             try {
                 yield (0, connection_1.default)("albuns").where("idalbum", "=", id).update(updates);
@@ -32,14 +43,6 @@ class albumData {
                     idartist,
                     releasealbum,
                 });
-            }
-            catch (sql) {
-                throw sql;
-            }
-        });
-        this.deleteAlbum = (id) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                return yield (0, connection_1.default)("albuns").where("idalbum", "=", id).del();
             }
             catch (sql) {
                 throw sql;

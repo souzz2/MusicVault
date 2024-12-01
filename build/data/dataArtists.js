@@ -14,8 +14,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.artistData = void 0;
 const connection_1 = __importDefault(require("../connection"));
+const idGenerator_1 = require("../services/idGenerator");
 class artistData {
     constructor() {
+        this.deleteArtist = (id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield (0, connection_1.default)("artists").where("idartist", id).del();
+                if (result === 0) {
+                    throw new Error(`Aritsta com id ${id} não encontrado.`);
+                }
+            }
+            catch (error) {
+                throw new Error("Erro ao deletar o artista no banco de dados.");
+            }
+        });
+        this.addArtist = (nameartist, bio, countryartist, ageartist) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const idartist = (0, idGenerator_1.generatedId)();
+                yield (0, connection_1.default)("artists").insert({
+                    idartist,
+                    nameartist,
+                    bio,
+                    countryartist,
+                    ageartist,
+                });
+            }
+            catch (sql) {
+                throw sql;
+            }
+        });
         this.getArtistByIdData = (id) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield (0, connection_1.default)("artists")

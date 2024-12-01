@@ -30,8 +30,7 @@ export class musicBusiness {
     updates: {
       namemusic?: string;
       genremusic?: string;
-      duration?: string;
-      idalbum?: string
+      duration?: string
     }
   ) => {
     try {
@@ -103,17 +102,12 @@ export class musicBusiness {
     namemusic: string,
     genremusic: string,
     duration: string,
-    idalbum: string, 
     token: string
   ) => {
-    try {
-      if (!token) {
-        throw new Error("Token não informado");
-      }
-      const idmusic = generatedId();
-      await this.musicData.addMusics(namemusic, genremusic, duration, idalbum);
-    } catch (error: any) {
-      throw new Error(error.message || "Erro ao adicionar a música.");
+    if (!token) {
+      throw new Error("Token não informado");
     }
+    const idmusic = generatedId();
+    await this.musicData.addMusics(namemusic, genremusic, duration);
   };
 }

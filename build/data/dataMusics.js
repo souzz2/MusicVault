@@ -17,9 +17,9 @@ const connection_1 = __importDefault(require("../connection"));
 const idGenerator_1 = require("../services/idGenerator");
 class musicData {
     constructor() {
-        this.updateMusicAlbum = (idmusic, idalbum) => __awaiter(this, void 0, void 0, function* () {
+        this.updateMusicAlbum = (idmusic) => __awaiter(this, void 0, void 0, function* () {
             try {
-                yield (0, connection_1.default)("musics").where("idmusic", idmusic).update({ idalbum });
+                yield (0, connection_1.default)("musics").where("idmusic", idmusic).update({ idmusic });
             }
             catch (error) {
                 if (error instanceof Error) {
@@ -57,10 +57,6 @@ class musicData {
                     fields.push("duration = ?");
                     values.push(updates.duration);
                 }
-                if (updates.idalbum) {
-                    fields.push("idalbum = ?");
-                    values.push(updates.idalbum);
-                }
                 if (fields.length === 0) {
                     throw new Error("Nenhum campo válido para atualizar.");
                 }
@@ -76,7 +72,7 @@ class musicData {
                 throw new Error("Erro ao atualizar música no banco de dados.");
             }
         });
-        this.addMusics = (namemusic, genremusic, duration, idalbum) => __awaiter(this, void 0, void 0, function* () {
+        this.addMusics = (namemusic, genremusic, duration) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const idmusic = (0, idGenerator_1.generatedId)();
                 yield (0, connection_1.default)("musics").insert({
@@ -84,7 +80,6 @@ class musicData {
                     namemusic,
                     genremusic,
                     duration,
-                    idalbum,
                 });
             }
             catch (sql) {

@@ -17,13 +17,6 @@ class AlbumBusiness {
     constructor() {
         this.albumData = new dataAlbuns_1.albumData();
         this.musicData = new musicBusiness_1.musicBusiness();
-    }
-}
-exports.AlbumBusiness = AlbumBusiness;
-class AlbumBusiness {
-    constructor() {
-        this.albumData = new dataAlbuns_1.albumData();
-        this.musicData = new musicBusiness_1.musicBusiness();
         this.addAlbumWithMusics = (namealbum, releasealbum, idartist, musics, token) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
@@ -35,17 +28,14 @@ class AlbumBusiness {
                 const idalbum = (0, idGenerator_1.generatedId)();
                 yield this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, []);
                 for (const music of musics) {
-                    console.log(`Procurando música: ${music.namemusic}`);
                     const existingMusic = yield this.musicData.searchMusicByName(music.namemusic, token);
+                    console.log(`Resultado da busca: ${JSON.stringify(existingMusic)}`);
                     if (existingMusic.length === 0) {
-                        console.log(`Música não encontrada, adicionando: ${music.namemusic}`);
-                        yield this.musicData.addMusic(music.namemusic, music.genremusic, music.duration, idalbum, token);
+                        yield this.musicData.addMusic(music.namemusic, music.genremusic, music.duration, token);
                     }
                     else {
                         console.log(`Música encontrada, atualizando: ${music.namemusic}`);
-                        yield this.musicData.updateMusic(existingMusic[0].idmusic, token, {
-                            idalbum,
-                        });
+                        yield this.musicData.updateMusic(existingMusic[0].idmusic, token, {});
                     }
                 }
                 return `Álbum "${namealbum}" adicionado com sucesso com as músicas associadas.`;

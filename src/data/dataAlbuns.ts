@@ -2,6 +2,17 @@ import connection from "../connection";
 import { album } from "../types/typesAlbums";
 
 export class albumData {
+  deleteAlbum = async (id: string): Promise<void> => {
+    try {
+      const result = await connection("albuns").where("idalbum", id).del();
+      if (result === 0) {
+        throw new Error(`Album com id ${id} não encontrado.`);
+      }
+    } catch (error) {
+      throw new Error("Erro ao deletar o álbum no banco de dados.");
+    }
+  };
+
   updateAlbum = async (
     id: string,
     updates: { namealbum?: string; releasealbum?: string; idartist?: string }
@@ -32,13 +43,6 @@ export class albumData {
     }
   };
 
-  deleteAlbum = async (id: string) => {
-    try {
-      return await connection("albuns").where("idalbum", "=", id).del();
-    } catch (sql) {
-      throw sql;
-    }
-  };
 
   getAlbumsMusicData = async (id: string): Promise<any> => {
     try {

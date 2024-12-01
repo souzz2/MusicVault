@@ -1,6 +1,39 @@
 import connection from "../connection";
+import { generatedId } from "../services/idGenerator";
 
 export class artistData {
+
+  deleteArtist = async (id: string): Promise<void> => {
+    try {
+      const result = await connection("artists").where("idartist", id).del();
+      if (result === 0) {
+        throw new Error(`Aritsta com id ${id} não encontrado.`);
+      }
+    } catch (error) {
+      throw new Error("Erro ao deletar o artista no banco de dados.");
+    }
+  };
+
+  addArtist = async (
+    nameartist: string,
+    bio: string,
+    countryartist: string,
+    ageartist: string
+  ): Promise<void> => {
+    try {
+      const idartist = generatedId();
+      await connection("artists").insert({
+        idartist,
+        nameartist,
+        bio,
+        countryartist,
+        ageartist,
+      });
+    } catch (sql) {
+      throw sql;
+    }
+  };
+
   getArtistByIdData = async (id: string): Promise<any> => {
     try {
       const result = await connection("artists")

@@ -96,13 +96,13 @@ class musicBusiness {
                 throw new Error(error.message || "Erro ao buscar músicas.");
             }
         });
-        this.addMusic = (namemusic, genremusic, duration, idalbum, token) => __awaiter(this, void 0, void 0, function* () {
+        this.addMusic = (namemusic, genremusic, duration, token) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
                     throw new Error("Token não informado");
                 }
                 const idmusic = (0, idGenerator_1.generatedId)();
-                yield this.musicData.addMusics(namemusic, genremusic, duration, idalbum);
+                yield this.musicData.addMusics(namemusic, genremusic, duration);
             }
             catch (error) {
                 throw new Error(error.message || "Erro ao adicionar a música.");
