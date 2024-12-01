@@ -36,4 +36,5 @@ Bem-vindo ao MusicVault, uma aplicação robusta e intuitiva para gerenciar álb
    npm install
 
 ## Documentação da API
-   A documentação completa da API pode ser encontrada no link
+   A documentação completa da API pode ser encontrada no link:
+   https://documenter.getpostman.com/view/39492653/2sAYBYfVbr
