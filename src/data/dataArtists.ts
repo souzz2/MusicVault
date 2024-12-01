@@ -1,6 +1,4 @@
 import connection from "../connection";
-import { generatedId } from "../services/idGenerator";
-
 export class artistData {
 
   deleteArtist = async (id: string): Promise<void> => {

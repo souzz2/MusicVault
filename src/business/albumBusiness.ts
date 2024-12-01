@@ -1,6 +1,6 @@
-import { albumData, album } from "../data/dataAlbuns";
+import { albumData } from "../data/dataAlbums";
 import { generatedId } from "../services/idGenerator";
-import { musicBusiness } from "./musicBusiness"; // Importar a classe musicBusiness
+import { musicBusiness } from "./musicBusiness"; 
 
 export class AlbumBusiness {
   albumData = new albumData();
@@ -43,7 +43,6 @@ export class AlbumBusiness {
               idalbum,
               token
             );
-            console.log(existingMusic);
             await this.musicBusiness.updateMusic(
               existingMusic[0].idmusic,
               token,

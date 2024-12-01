@@ -1,9 +1,3 @@
-/*export enum userRole {
-  NORMAL = "NORMAL",
-  ADMIN = "ADMIN",
-  ARTISTA = "ARTISTA",
-}*/
-
 export type authenticationData = {
   iduser: string;
 };

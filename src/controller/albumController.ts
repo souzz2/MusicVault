@@ -41,18 +41,25 @@ export class AlbumController {
     try {
       const { id } = req.params;
       const { namealbum, releasealbum, idartist } = req.body;
-      if (!id) {
-        throw new Error("O ID do álbum é obrigatório.");
+      const token = req.headers.authorization;
+
+      if (!token) {
+        throw new Error("Token de autorização não fornecido.");
       }
-      
-      const token = req.headers.authorization as string;
-      await this.albumBusiness.updateAlbum(id, namealbum, releasealbum, idartist, token);
-  
-      res.status(200).json({ message: "Álbum atualizado com sucesso!" });
+
+      await this.albumBusiness.updateAlbum(
+        id,
+        token,
+        namealbum,
+        releasealbum,
+        idartist
+      );
+
+      res.status(200).send({
+        message: `Álbum com ID ${id} atualizado com sucesso.`,
+      });
     } catch (error: any) {
-      res
-        .status(500)
-        .json({ message: error.message || "Erro ao atualizar álbum", error });
+      res.status(400).send({ error: error.message });
     }
   };
   

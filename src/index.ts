@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { albumRouter } from "./router/routerAlbuns";
+import { albumRouter } from "./router/routerAlbums";
 import { artistRouter } from "./router/routerArtists";
 import { musicRouter } from "./router/routerMusics";
 import { userRouter } from "./router/routerUsers";

@@ -18,9 +18,17 @@ export class albumData {
     updates: { namealbum?: string; releasealbum?: string; idartist?: string }
   ): Promise<void> => {
     try {
-      await connection("albuns").where("idalbum", "=", id).update(updates);
+      const updateData: any = {};
+      if (updates.namealbum) updateData.namealbum = updates.namealbum;
+      if (updates.releasealbum) updateData.releasealbum = updates.releasealbum;
+      if (updates.idartist) updateData.idartist = updates.idartist;
+
+      console.log(`Atualizando álbum com id: ${id} com os dados: ${JSON.stringify(updateData)}`);  // Log para depuração
+
+      await connection("albuns").where("idalbum", "=", id).update(updateData);
     } catch (sql) {
-      throw sql;
+      console.error(`Erro ao atualizar o álbum no banco de dados: ${(sql as Error).message}`);  // Log do erro
+      throw new Error("Erro ao atualizar o álbum no banco de dados.");
     }
   };
 
