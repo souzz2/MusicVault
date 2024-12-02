@@ -59,7 +59,6 @@ class artistData {
         this.getArtistsByNameData = (name) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield (0, connection_1.default)("artists")
-                    .select("nameartist")
                     .where("nameartist", "like", `%${name}%`)
                     .orderBy("nameartist", "asc")
                     .limit(5);

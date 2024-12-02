@@ -29,10 +29,7 @@ class musicData {
         });
         this.updateMusics = (id, updates) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const result = yield (0, connection_1.default)("musics")
-                    .where("idmusic", id)
-                    .update(updates);
-                return result;
+                yield (0, connection_1.default)("musics").where("idmusic", id).update(updates);
             }
             catch (error) {
                 throw new Error("Erro ao atualizar música no banco de dados.");

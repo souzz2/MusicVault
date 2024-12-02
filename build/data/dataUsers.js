@@ -22,7 +22,7 @@ class userData {
                     iduser: user.iduser,
                     nickname: user.nickname,
                     password: user.password,
-                    emailuser: user.emailuser
+                    emailuser: user.emailuser,
                 });
             }
             catch (sql) {
@@ -40,7 +40,7 @@ class userData {
                     iduser: result[0].iduser,
                     nickname: result[0].nickname,
                     emailuser: result[0].emailuser,
-                    password: result[0].password
+                    password: result[0].password,
                 };
             }
             catch (sql) {
@@ -49,7 +49,7 @@ class userData {
         });
         this.getUsers = () => __awaiter(this, void 0, void 0, function* () {
             try {
-                return yield (0, connection_1.default)("users").orderBy("iduser", "asc").limit(10);
+                return yield (0, connection_1.default)("users").select("iduser", "nickname", "emailuser").orderBy("iduser", "asc").limit(10);
             }
             catch (sql) {
                 throw sql;

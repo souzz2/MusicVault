@@ -42,6 +42,9 @@ class AlbumController {
                 const { id } = req.params;
                 const { namealbum, releasealbum, idartist } = req.body;
                 const token = req.headers.authorization;
+                if (!id) {
+                    throw new Error("O ID do álbum é obrigatório.");
+                }
                 if (!token) {
                     throw new Error("Token de autorização não fornecido.");
                 }
@@ -77,16 +80,18 @@ class AlbumController {
                 const { name } = req.query;
                 const token = req.headers.authorization;
                 if (!token) {
-                    return res
-                        .status(401)
-                        .send({ message: "Token de autorização não fornecido." });
+                    res.status(401).send({ message: "Token de autorização não fornecido." });
+                    return;
                 }
                 if (!name) {
-                    return res
-                        .status(400)
-                        .send({ message: 'O parâmetro "name" é obrigatório.' });
+                    res.status(400).send({ message: 'O parâmetro "name" é obrigatório.' });
+                    return;
                 }
                 const albums = yield this.albumBusiness.searchAlbumsByName(name, token);
+                if (albums.length === 0) {
+                    res.status(200).send({ message: "Nenhum álbum encontrado." });
+                    return;
+                }
                 res.status(200).send(albums);
             }
             catch (error) {

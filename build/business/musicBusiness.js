@@ -84,19 +84,17 @@ class musicBusiness {
             }
         });
         this.searchMusicByName = (name, token) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                if (!token) {
-                    throw new Error("Token não informado");
-                }
-                if (!name) {
-                    throw new Error('O parâmetro de busca "name" é obrigatório.');
-                }
-                const musics = yield this.musicData.searchMusicByName(name);
-                return musics || [];
+            if (!token) {
+                throw new Error("Token não informado");
             }
-            catch (error) {
-                throw new Error(error.message || "Erro ao buscar músicas.");
+            if (!name) {
+                throw new Error('O parâmetro de busca "name" é obrigatório.');
             }
+            const musics = yield this.musicData.searchMusicByName(name);
+            if (!musics || musics.length === 0) {
+                throw new Error("Nenhuma música foi encontrada.");
+            }
+            return musics;
         });
         this.getMusicById = (id, token) => __awaiter(this, void 0, void 0, function* () {
             try {

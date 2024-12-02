@@ -100,26 +100,6 @@ class musicController {
                     .json({ message: "Erro ao buscar música", error: error.message });
             }
         });
-        this.searchMusicByName = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            try {
-                const name = (_a = req.query.name) === null || _a === void 0 ? void 0 : _a.toString().toLowerCase();
-                if (!name) {
-                    throw new Error('O parâmetro de busca "name" é obrigatório.');
-                }
-                const token = req.headers.authorization;
-                const musics = yield this.musicBusiness.searchMusicByName(name, token);
-                if (!musics || musics.length === 0) {
-                    throw new Error("Nenhuma música foi encontrada.");
-                }
-                res.status(200).json({ musics });
-            }
-            catch (error) {
-                res
-                    .status(500)
-                    .json({ message: "Erro ao buscar música", error: error.message });
-            }
-        });
         this.getMusics = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const token = req.headers.authorization;

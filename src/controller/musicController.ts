@@ -109,6 +109,38 @@ export class musicController {
     }
   };
 
+  searchMusicByName = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const name = req.query.name?.toString().toLowerCase();
+        if (!name) {
+            res.status(400).json({ message: 'O parâmetro de busca "name" é obrigatório.' });
+            return;
+        }
+
+        const token = req.headers.authorization as string;
+        if (!token) {
+            res.status(401).json({ message: 'Token de autorização não fornecido.' });
+            return;
+        }
+        const musics = await this.musicBusiness.searchMusicByName(name, token);
+        if (!musics || musics.length === 0) {
+            res.status(404).json({ message: "Nenhuma música foi encontrada." });
+            return;
+        }
+        if (!musics || musics.length === 0) {
+            res.status(404).json({ message: "Nenhuma música foi encontrada." });
+            return;
+        }
+
+        res.status(200).json({ musics });
+    } catch (error: any) {
+        res.status(500).json({ message: "Erro ao buscar música", error: error.message });
+    }
+};
+
+
+
+
   getMusics = async (req: Request, res: Response) => {
     try {
       const token = req.headers.authorization as string;

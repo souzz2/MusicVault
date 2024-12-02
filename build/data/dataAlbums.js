@@ -36,7 +36,12 @@ class albumData {
                     updateData.releasealbum = updates.releasealbum;
                 if (updates.idartist)
                     updateData.idartist = updates.idartist;
-                yield (0, connection_1.default)("albuns").where("idalbum", "=", id).update(updateData);
+                const result = yield (0, connection_1.default)("albuns")
+                    .where("idalbum", "=", id)
+                    .update(updateData);
+                if (result === 0) {
+                    throw new Error("Nenhum álbum encontrado com o ID fornecido.");
+                }
             }
             catch (sql) {
                 throw new Error("Erro ao atualizar o álbum no banco de dados.");
@@ -59,7 +64,7 @@ class albumData {
             console.log(`Buscando álbuns com o nome: ${name}`);
             try {
                 const result = yield (0, connection_1.default)("albuns")
-                    .select("namealbum")
+                    .select("*")
                     .where("namealbum", "ilike", `%${name}%`)
                     .orderBy("namealbum", "asc")
                     .limit(5);
