@@ -91,6 +91,7 @@ export class musicController {
   };
 
   getMusicsById = async (req: Request, res: Response) => {
+
     try {
       const { id } = req.params;
       const token = req.headers.authorization as string;
@@ -109,6 +110,7 @@ export class musicController {
   };
 
   searchMusicByName = async (req: Request, res: Response) => {
+    console.log("ENTROU NO SEARCH MUSIC BY NAME");
     try {
       console.log("Iniciando busca por música...");
       const name = req.query.name?.toString().toLowerCase();

@@ -28,7 +28,7 @@ Bem-vindo ao MusicVault, uma aplicação robusta e intuitiva para gerenciar álb
 
 1. Clone o repositório:
    ```sh
-   git clone https://github.com/seu-usuario/musicvault.git
+   git clone https://github.com/souzz2/musicvault.git
    cd musicvault
 
 2. Instale as dependências 

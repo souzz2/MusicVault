@@ -130,6 +130,8 @@ export class musicBusiness {
 
       const musics = await this.musicData.searchMusicByName(name);
 
+      console.log("Músicas encontradas:", musics);
+
       return musics || [];
     } catch (error: any) {
       throw new Error(error.message || "Erro ao buscar músicas.");

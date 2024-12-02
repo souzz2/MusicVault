@@ -68,7 +68,7 @@ export class musicData {
   searchMusicByName = async (name: string): Promise<music[]> => {
     console.log(`Buscando músicas com o nome: ${name}`); 
     try {
-      const result = await connection("musics").where("namemusic", "like", `%${name}%`);
+      const result = await connection("musics").where("namemusic", "ilike", `%${name}%`);
       return result;
     } catch (error) {
       throw new Error("Erro ao buscar músicas no banco de dados.");
