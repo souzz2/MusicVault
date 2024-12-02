@@ -109,26 +109,6 @@ export class musicController {
     }
   };
 
-  searchMusicByName = async (req: Request, res: Response) => {
-    try {
-      const name = req.query.name?.toString().toLowerCase();
-      if (!name) {
-        throw new Error('O parâmetro de busca "name" é obrigatório.');
-      }
-      const token = req.headers.authorization as string;
-      const musics = await this.musicBusiness.searchMusicByName(name, token);
-      if (!musics || musics.length === 0) {
-        throw new Error("Nenhuma música foi encontrada.");
-      }
-
-      res.status(200).json({ musics });
-    } catch (error: any) {
-      res
-        .status(500)
-        .json({ message: "Erro ao buscar música", error: error.message });
-    }
-  };
-
   getMusics = async (req: Request, res: Response) => {
     try {
       const token = req.headers.authorization as string;

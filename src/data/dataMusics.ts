@@ -21,12 +21,9 @@ export class musicData {
       duration?: string;
       idalbum?: string;
     }
-  ): Promise<number> => {
+  ): Promise<void> => {
     try {
-      const result = await connection("musics")
-        .where("idmusic", id)
-        .update(updates);
-      return result;
+      await connection("musics").where("idmusic", id).update(updates);
     } catch (error) {
       throw new Error("Erro ao atualizar música no banco de dados.");
     }

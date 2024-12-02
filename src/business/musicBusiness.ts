@@ -117,21 +117,21 @@ export class musicBusiness {
   };
 
   searchMusicByName = async (name: string, token: string) => {
-    try {
-      if (!token) {
+    if (!token) {
         throw new Error("Token não informado");
-      }
-      if (!name) {
-        throw new Error('O parâmetro de busca "name" é obrigatório.');
-      }
-
-      const musics = await this.musicData.searchMusicByName(name);
-
-      return musics || [];
-    } catch (error: any) {
-      throw new Error(error.message || "Erro ao buscar músicas.");
     }
-  };
+    if (!name) {
+        throw new Error('O parâmetro de busca "name" é obrigatório.');
+    }
+
+    const musics = await this.musicData.searchMusicByName(name);
+    if (!musics || musics.length === 0) {
+        throw new Error("Nenhuma música foi encontrada.");
+    }
+
+    return musics;
+};
+
 
   getMusicById = async (id: string, token: string) => {
     try {
