@@ -4,9 +4,9 @@ import { musicController } from "../controller/musicController";
 export const musicRouter = express.Router();
 const controller = new musicController();
 
-musicRouter.get("/:search", controller.searchMusicByName);
-musicRouter.get("/:id", controller.getMusicsById);
-musicRouter.get("/", controller.getMusics);
-musicRouter.delete("/:id", controller.deleteMusic);
-musicRouter.patch("/:id", controller.updateMusic);
-musicRouter.post("/", controller.postMusic);
+musicRouter.post("/", controller.postMusic); 
+musicRouter.patch("/:id", controller.updateMusic); 
+musicRouter.get("/", controller.getMusics); 
+musicRouter.get("/:id", controller.getMusicsById); 
+musicRouter.get("/search", controller.searchMusicByName); 
+musicRouter.delete("/:id", controller.deleteMusic); 

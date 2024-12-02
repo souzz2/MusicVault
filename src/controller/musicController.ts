@@ -27,22 +27,23 @@ export class musicController {
   updateMusic = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-      const { namemusic, genremusic, duration } = req.body;
+      const { namemusic, genremusic, duration, idalbum } = req.body;
+      const token = req.headers.authorization as string;
 
-      if (!id || (!namemusic && !genremusic && !duration)) {
+      if (!id || (!namemusic && !genremusic && !duration && !idalbum)) {
         throw new Error("Parâmetros de atualização inválidos.");
       }
-      const token = req.headers.authorization as string;
+
       await this.musicBusiness.updateMusic(id, token, {
         namemusic,
         genremusic,
         duration,
+        idalbum,
       });
-      res.status(200).json(`Música com ID ${id} atualizada com sucesso.`);
+
+      res.status(200).json({ message: `Música com ID ${id} atualizada com sucesso.` });
     } catch (error: any) {
-      res
-        .status(500)
-        .json({ message: "Erro ao atualizar música.", error: error.message });
+      res.status(400).json({ message: error.message });
     }
   };
 
@@ -91,7 +92,6 @@ export class musicController {
   };
 
   getMusicsById = async (req: Request, res: Response) => {
-
     try {
       const { id } = req.params;
       const token = req.headers.authorization as string;
@@ -110,25 +110,19 @@ export class musicController {
   };
 
   searchMusicByName = async (req: Request, res: Response) => {
-    console.log("ENTROU NO SEARCH MUSIC BY NAME");
     try {
-      console.log("Iniciando busca por música...");
       const name = req.query.name?.toString().toLowerCase();
-      console.log("Nome da música:", name);
       if (!name) {
         throw new Error('O parâmetro de busca "name" é obrigatório.');
       }
       const token = req.headers.authorization as string;
-      console.log("Token:", token);
       const musics = await this.musicBusiness.searchMusicByName(name, token);
-      console.log("Resultado da busca:", musics);
       if (!musics || musics.length === 0) {
         throw new Error("Nenhuma música foi encontrada.");
       }
 
       res.status(200).json({ musics });
     } catch (error: any) {
-      console.error("Erro ao buscar música:", error.message);
       res
         .status(500)
         .json({ message: "Erro ao buscar música", error: error.message });

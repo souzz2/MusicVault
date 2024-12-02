@@ -19,18 +19,24 @@ export class albumData {
   ): Promise<void> => {
     try {
       const updateData: any = {};
+  
       if (updates.namealbum) updateData.namealbum = updates.namealbum;
       if (updates.releasealbum) updateData.releasealbum = updates.releasealbum;
       if (updates.idartist) updateData.idartist = updates.idartist;
-
-      console.log(`Atualizando álbum com id: ${id} com os dados: ${JSON.stringify(updateData)}`);  // Log para depuração
-
-      await connection("albuns").where("idalbum", "=", id).update(updateData);
+  
+      const result = await connection("albuns")
+        .where("idalbum", "=", id)
+        .update(updateData);
+  
+      // Verifica se alguma linha foi alterada
+      if (result === 0) {
+        throw new Error("Nenhum álbum encontrado com o ID fornecido.");
+      }
     } catch (sql) {
-      console.error(`Erro ao atualizar o álbum no banco de dados: ${(sql as Error).message}`);  // Log do erro
       throw new Error("Erro ao atualizar o álbum no banco de dados.");
     }
   };
+  
 
   addAlbum = async (
     idalbum: string,
@@ -50,18 +56,22 @@ export class albumData {
     }
   };
 
-
   getAlbumsByNameData = async (name: string): Promise<any> => {
+    console.log(`Buscando álbuns com o nome: ${name}`);
     try {
-      return await connection("albuns")
-        .select("namealbum")
-        .where("namealbum", "like", `%${name}%`)
-        .orderBy("namealbum", "asc")
-        .limit(5);
-    } catch (sql) {
-      throw sql;
+        const result = await connection("albuns")
+            .select("*")
+            .where("namealbum", "ilike", `%${name}%`)
+            .orderBy("namealbum", "asc")
+            .limit(5);
+        console.log(`Resultado da busca: ${JSON.stringify(result)}`);
+        return result;
+    } catch (error: any) {
+        console.error("Erro ao buscar álbuns no banco de dados:", error.message);
+        throw error; // Não substitua o erro aqui
     }
-  };
+};
+
 
   getAlbumsData = async (): Promise<any> => {
     try {

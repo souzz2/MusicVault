@@ -9,15 +9,23 @@ export class AlbumController {
     try {
       const { namealbum, releasealbum, idartist, musics } = req.body;
       const token = req.headers.authorization;
-  
+
       if (!token) {
         throw new Error("Token de autorização não fornecido.");
       }
-  
-      if (!namealbum || !releasealbum || !idartist || !musics || musics.length === 0) {
-        throw new Error("Parâmetros do álbum ou das músicas estão incompletos.");
+
+      if (
+        !namealbum ||
+        !releasealbum ||
+        !idartist ||
+        !musics ||
+        musics.length === 0
+      ) {
+        throw new Error(
+          "Parâmetros do álbum ou das músicas estão incompletos."
+        );
       }
-  
+
       await this.albumBusiness.addAlbumWithMusics(
         namealbum,
         releasealbum,
@@ -25,7 +33,7 @@ export class AlbumController {
         musics,
         token
       );
-  
+
       res.status(201).send({
         message: `Álbum "${namealbum}" adicionado com sucesso.`,
       });
@@ -33,9 +41,6 @@ export class AlbumController {
       res.status(400).send({ error: error.message });
     }
   };
-  
-  
-
 
   updateAlbum = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -43,6 +48,10 @@ export class AlbumController {
       const { namealbum, releasealbum, idartist } = req.body;
       const token = req.headers.authorization;
 
+      if (!id) {
+        throw new Error("O ID do álbum é obrigatório.");
+      }
+    
       if (!token) {
         throw new Error("Token de autorização não fornecido.");
       }
@@ -62,8 +71,6 @@ export class AlbumController {
       res.status(400).send({ error: error.message });
     }
   };
-  
-  
 
   deleteAlbum = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -71,7 +78,7 @@ export class AlbumController {
       if (!id) {
         throw new Error("O id do álbum é obrigatório.");
       }
-      
+
       const token = req.headers.authorization as string;
       await this.albumBusiness.deleteAlbum(id, token);
       res
@@ -84,18 +91,38 @@ export class AlbumController {
     }
   };
 
-
-  searchAlbumsByName = async (req: Request, res: Response) => {
+  searchAlbumsByName = async (req: Request, res: Response): Promise<void> => {
     try {
-      const name = req.query.name as string;
-      const token = req.headers.authorization as string;
-      const albums = await this.albumBusiness.searchAlbumsByName(name, token);
-      res.status(200).json({ albums });
+        const { name } = req.query;
+        const token = req.headers.authorization;
+
+        if (!token) {
+            res.status(401).send({ message: "Token de autorização não fornecido." });
+            return;
+        }
+
+        if (!name) {
+            res.status(400).send({ message: 'O parâmetro "name" é obrigatório.' });
+            return;
+        }
+
+        const albums = await this.albumBusiness.searchAlbumsByName(name as string, token);
+
+        if (albums.length === 0) {
+            res.status(200).send({ message: "Nenhum álbum encontrado." });
+            return;
+        }
+
+        res.status(200).send(albums);
     } catch (error: any) {
-      const message = error.message || "Erro ao buscar álbum";
-      res.status(500).json({ message, error });
+        console.error("Erro ao buscar álbuns:", error.message);
+        res.status(400).send({
+            message: "Erro ao buscar álbuns",
+            error: error.message,
+        });
     }
-  };
+};
+
 
   getAlbums = async (req: Request, res: Response) => {
     try {

@@ -29,7 +29,10 @@ class musicData {
         });
         this.updateMusics = (id, updates) => __awaiter(this, void 0, void 0, function* () {
             try {
-                yield (0, connection_1.default)("musics").where("idmusic", id).update(updates);
+                const result = yield (0, connection_1.default)("musics")
+                    .where("idmusic", id)
+                    .update(updates);
+                return result;
             }
             catch (error) {
                 throw new Error("Erro ao atualizar música no banco de dados.");
@@ -66,10 +69,11 @@ class musicData {
         });
         this.searchMusicByName = (name) => __awaiter(this, void 0, void 0, function* () {
             try {
-                return yield (0, connection_1.default)("musics").where("namemusic", "like", `%${name}%`);
+                const result = yield (0, connection_1.default)("musics").where("namemusic", "ilike", `%${name}%`);
+                return result;
             }
-            catch (sql) {
-                throw sql;
+            catch (error) {
+                throw new Error("Erro ao buscar músicas no banco de dados.");
             }
         });
         this.getMusics = (limit, offset) => __awaiter(this, void 0, void 0, function* () {

@@ -1,6 +1,6 @@
 import { albumData } from "../data/dataAlbums";
 import { generatedId } from "../services/idGenerator";
-import { musicBusiness } from "./musicBusiness"; 
+import { musicBusiness } from "./musicBusiness";
 
 export class AlbumBusiness {
   albumData = new albumData();
@@ -126,8 +126,9 @@ export class AlbumBusiness {
       }
 
       return albums;
-    } catch (error) {
-      throw new Error("Erro ao buscar álbuns");
+    } catch (error: any) {
+      console.error("Erro na camada de negócios:", error.message);
+      throw error; 
     }
   };
 

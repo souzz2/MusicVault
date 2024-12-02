@@ -21,7 +21,11 @@ class AlbumController {
                 if (!token) {
                     throw new Error("Token de autorização não fornecido.");
                 }
-                if (!namealbum || !releasealbum || !idartist || !musics || musics.length === 0) {
+                if (!namealbum ||
+                    !releasealbum ||
+                    !idartist ||
+                    !musics ||
+                    musics.length === 0) {
                     throw new Error("Parâmetros do álbum ou das músicas estão incompletos.");
                 }
                 yield this.albumBusiness.addAlbumWithMusics(namealbum, releasealbum, idartist, musics, token);
@@ -70,14 +74,27 @@ class AlbumController {
         });
         this.searchAlbumsByName = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const name = req.query.name;
+                const { name } = req.query;
                 const token = req.headers.authorization;
+                if (!token) {
+                    return res
+                        .status(401)
+                        .send({ message: "Token de autorização não fornecido." });
+                }
+                if (!name) {
+                    return res
+                        .status(400)
+                        .send({ message: 'O parâmetro "name" é obrigatório.' });
+                }
                 const albums = yield this.albumBusiness.searchAlbumsByName(name, token);
-                res.status(200).json({ albums });
+                res.status(200).send(albums);
             }
             catch (error) {
-                const message = error.message || "Erro ao buscar álbum";
-                res.status(500).json({ message, error });
+                console.error("Erro ao buscar álbuns:", error.message);
+                res.status(400).send({
+                    message: "Erro ao buscar álbuns",
+                    error: error.message,
+                });
             }
         });
         this.getAlbums = (req, res) => __awaiter(this, void 0, void 0, function* () {

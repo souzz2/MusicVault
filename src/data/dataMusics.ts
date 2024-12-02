@@ -21,9 +21,12 @@ export class musicData {
       duration?: string;
       idalbum?: string;
     }
-  ): Promise<void> => {
+  ): Promise<number> => {
     try {
-      await connection("musics").where("idmusic", id).update(updates);
+      const result = await connection("musics")
+        .where("idmusic", id)
+        .update(updates);
+      return result;
     } catch (error) {
       throw new Error("Erro ao atualizar música no banco de dados.");
     }
@@ -66,7 +69,6 @@ export class musicData {
   };
 
   searchMusicByName = async (name: string): Promise<music[]> => {
-    console.log(`Buscando músicas com o nome: ${name}`); 
     try {
       const result = await connection("musics").where("namemusic", "ilike", `%${name}%`);
       return result;

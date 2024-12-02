@@ -35,22 +35,21 @@ class musicController {
         this.updateMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const { namemusic, genremusic, duration } = req.body;
-                if (!id || (!namemusic && !genremusic && !duration)) {
+                const { namemusic, genremusic, duration, idalbum } = req.body;
+                const token = req.headers.authorization;
+                if (!id || (!namemusic && !genremusic && !duration && !idalbum)) {
                     throw new Error("Parâmetros de atualização inválidos.");
                 }
-                const token = req.headers.authorization;
                 yield this.musicBusiness.updateMusic(id, token, {
                     namemusic,
                     genremusic,
                     duration,
+                    idalbum,
                 });
-                res.status(200).json(`Música com ID ${id} atualizada com sucesso.`);
+                res.status(200).json({ message: `Música com ID ${id} atualizada com sucesso.` });
             }
             catch (error) {
-                res
-                    .status(500)
-                    .json({ message: "Erro ao atualizar música.", error: error.message });
+                res.status(400).json({ message: error.message });
             }
         });
         this.postMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {

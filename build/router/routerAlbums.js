@@ -11,5 +11,5 @@ const albumController = new albumController_1.AlbumController();
 exports.albumRouter.post("/", albumController.addAlbumWithMusics);
 exports.albumRouter.put("/:id", albumController.updateAlbum);
 exports.albumRouter.delete("/:id", albumController.deleteAlbum);
-exports.albumRouter.get("/", albumController.getAlbums);
 exports.albumRouter.get("/search", albumController.searchAlbumsByName);
+exports.albumRouter.get("/", albumController.getAlbums);

@@ -1,6 +1,5 @@
 import connection from "../connection";
 export class artistData {
-
   deleteArtist = async (id: string): Promise<void> => {
     try {
       const result = await connection("artists").where("idartist", id).del();
@@ -50,7 +49,6 @@ export class artistData {
   getArtistsByNameData = async (name: string): Promise<any> => {
     try {
       const result = await connection("artists")
-        .select("nameartist")
         .where("nameartist", "like", `%${name}%`)
         .orderBy("nameartist", "asc")
         .limit(5);

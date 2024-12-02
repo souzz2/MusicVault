@@ -39,13 +39,12 @@ class musicBusiness {
                     throw new Error("Token não informado");
                 }
                 const music = yield this.musicData.findMusicById(id);
-                if (!music) {
-                    throw new Error(`Música com id ${id} não encontrada.`);
+                if (!music || music.length === 0) {
+                    throw new Error(`Música com ID ${id} não encontrada.`);
                 }
-                yield this.musicData.updateMusics(id, updates);
             }
             catch (error) {
-                throw new Error(error.message || "Erro ao atualizar a música.");
+                throw new Error(error.message || "Erro ao atualizar música.");
             }
         });
         this.addMusic = (namemusic, genremusic, duration, token) => __awaiter(this, void 0, void 0, function* () {

@@ -36,11 +36,9 @@ class albumData {
                     updateData.releasealbum = updates.releasealbum;
                 if (updates.idartist)
                     updateData.idartist = updates.idartist;
-                console.log(`Atualizando álbum com id: ${id} com os dados: ${JSON.stringify(updateData)}`);
                 yield (0, connection_1.default)("albuns").where("idalbum", "=", id).update(updateData);
             }
             catch (sql) {
-                console.error(`Erro ao atualizar o álbum no banco de dados: ${sql.message}`);
                 throw new Error("Erro ao atualizar o álbum no banco de dados.");
             }
         });
@@ -58,15 +56,19 @@ class albumData {
             }
         });
         this.getAlbumsByNameData = (name) => __awaiter(this, void 0, void 0, function* () {
+            console.log(`Buscando álbuns com o nome: ${name}`);
             try {
-                return yield (0, connection_1.default)("albuns")
+                const result = yield (0, connection_1.default)("albuns")
                     .select("namealbum")
-                    .where("namealbum", "like", `%${name}%`)
+                    .where("namealbum", "ilike", `%${name}%`)
                     .orderBy("namealbum", "asc")
                     .limit(5);
+                console.log(`Resultado da busca: ${JSON.stringify(result)}`);
+                return result;
             }
-            catch (sql) {
-                throw sql;
+            catch (error) {
+                console.error("Erro ao buscar álbuns no banco de dados:", error.message);
+                throw error;
             }
         });
         this.getAlbumsData = () => __awaiter(this, void 0, void 0, function* () {

@@ -11,6 +11,6 @@ const controller = new musicController_1.musicController();
 exports.musicRouter.delete("/:id", controller.deleteMusic);
 exports.musicRouter.patch("/:id", controller.updateMusic);
 exports.musicRouter.post("/", controller.postMusic);
-exports.musicRouter.get("/:id", controller.getMusicsById);
 exports.musicRouter.get("/search", controller.searchMusicByName);
+exports.musicRouter.get("/:id", controller.getMusicsById);
 exports.musicRouter.get("/", controller.getMusics);

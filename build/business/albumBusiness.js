@@ -92,7 +92,8 @@ class AlbumBusiness {
                 return albums;
             }
             catch (error) {
-                throw new Error("Erro ao buscar álbuns");
+                console.error("Erro na camada de negócios:", error.message);
+                throw error;
             }
         });
         this.getAlbums = (token) => __awaiter(this, void 0, void 0, function* () {

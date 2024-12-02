@@ -39,13 +39,11 @@ export class musicBusiness {
         throw new Error("Token não informado");
       }
       const music = await this.musicData.findMusicById(id);
-      if (!music) {
-        throw new Error(`Música com id ${id} não encontrada.`);
+      if (!music || music.length === 0) {
+        throw new Error(`Música com ID ${id} não encontrada.`);
       }
-
-      await this.musicData.updateMusics(id, updates);
     } catch (error: any) {
-      throw new Error(error.message || "Erro ao atualizar a música.");
+      throw new Error(error.message || "Erro ao atualizar música.");
     }
   };
 
@@ -119,7 +117,6 @@ export class musicBusiness {
   };
 
   searchMusicByName = async (name: string, token: string) => {
-    console.log("name", name);
     try {
       if (!token) {
         throw new Error("Token não informado");
@@ -129,8 +126,6 @@ export class musicBusiness {
       }
 
       const musics = await this.musicData.searchMusicByName(name);
-
-      console.log("Músicas encontradas:", musics);
 
       return musics || [];
     } catch (error: any) {
@@ -152,6 +147,7 @@ export class musicBusiness {
       throw new Error(error.message || "Erro ao buscar a música");
     }
   };
+  
   getMusics = async (token: string, limit: number, offset: number) => {
     try {
       if (!token) {

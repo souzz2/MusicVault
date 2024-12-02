@@ -8,5 +8,5 @@ const albumController = new AlbumController();
 albumRouter.post("/", albumController.addAlbumWithMusics);
 albumRouter.put("/:id", albumController.updateAlbum);
 albumRouter.delete("/:id", albumController.deleteAlbum);
+albumRouter.get("/search", albumController.searchAlbumsByName); 
 albumRouter.get("/", albumController.getAlbums);
-albumRouter.get("/search", albumController.searchAlbumsByName);
