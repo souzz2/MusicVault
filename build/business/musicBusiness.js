@@ -48,7 +48,23 @@ class musicBusiness {
                 throw new Error(error.message || "Erro ao atualizar a música.");
             }
         });
-        this.addMusics = (namemusic, genremusic, duration, idalbum, token) => __awaiter(this, void 0, void 0, function* () {
+        this.addMusic = (namemusic, genremusic, duration, token) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (!token) {
+                    throw new Error("Token não informado");
+                }
+                if (!namemusic || !genremusic || !duration) {
+                    throw new Error("Todos os campos da música são obrigatórios.");
+                }
+                const idmusic = (0, idGenerator_1.generatedId)();
+                yield this.musicData.addMusicsData(idmusic, namemusic, genremusic, duration);
+                return idmusic;
+            }
+            catch (error) {
+                throw new Error(error.message || "Erro ao adicionar música no banco de dados.");
+            }
+        });
+        this.addMusicsWithAlbuns = (namemusic, genremusic, duration, idalbum, token) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
                     throw new Error("Token não informado");
@@ -61,12 +77,10 @@ class musicBusiness {
                 if (!albumExists) {
                     throw new Error(`Álbum com id ${idalbum} não encontrado.`);
                 }
-                console.log(`Adicionando música: { id: ${idmusic}, nome: ${namemusic}, gênero: ${genremusic}, duração: ${duration}, álbum: ${idalbum} }`);
                 yield this.musicData.addMusicsData(idmusic, namemusic, genremusic, duration, idalbum);
                 return idmusic;
             }
             catch (error) {
-                console.error("Erro no método addMusic:", error.message);
                 throw new Error(error.message || "Erro ao adicionar música no banco de dados.");
             }
         });
@@ -100,12 +114,12 @@ class musicBusiness {
                 throw new Error(error.message || "Erro ao buscar a música");
             }
         });
-        this.getMusics = (token) => __awaiter(this, void 0, void 0, function* () {
+        this.getMusics = (token, limit, offset) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
                     throw new Error("Token não informado");
                 }
-                const musics = yield this.musicData.getMusics();
+                const musics = yield this.musicData.getMusics(limit, offset);
                 if (musics.length === 0) {
                     throw new Error("Não há músicas disponíveis no momento.");
                 }

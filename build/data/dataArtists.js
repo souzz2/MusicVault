@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.artistData = void 0;
 const connection_1 = __importDefault(require("../connection"));
-const idGenerator_1 = require("../services/idGenerator");
 class artistData {
     constructor() {
         this.deleteArtist = (id) => __awaiter(this, void 0, void 0, function* () {
@@ -28,19 +27,18 @@ class artistData {
                 throw new Error("Erro ao deletar o artista no banco de dados.");
             }
         });
-        this.addArtist = (nameartist, bio, countryartist, ageartist) => __awaiter(this, void 0, void 0, function* () {
+        this.addArtist = (idartist, nameartist, bio, countryartist, datebirthartist) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const idartist = (0, idGenerator_1.generatedId)();
                 yield (0, connection_1.default)("artists").insert({
                     idartist,
                     nameartist,
                     bio,
                     countryartist,
-                    ageartist,
+                    datebirthartist,
                 });
             }
-            catch (sql) {
-                throw sql;
+            catch (error) {
+                throw new Error("Erro ao adicionar o artista no banco de dados.");
             }
         });
         this.getArtistByIdData = (id) => __awaiter(this, void 0, void 0, function* () {

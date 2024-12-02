@@ -60,7 +60,7 @@ export class musicBusiness {
         throw new Error("Token não informado");
       }
 
-      if (!namemusic || !genremusic || !duration ) {
+      if (!namemusic || !genremusic || !duration) {
         throw new Error("Todos os campos da música são obrigatórios.");
       }
 
@@ -119,6 +119,7 @@ export class musicBusiness {
   };
 
   searchMusicByName = async (name: string, token: string) => {
+    console.log("name", name);
     try {
       if (!token) {
         throw new Error("Token não informado");
@@ -149,7 +150,7 @@ export class musicBusiness {
       throw new Error(error.message || "Erro ao buscar a música");
     }
   };
-  getMusics = async (token: string,limit: number, offset: number) => {
+  getMusics = async (token: string, limit: number, offset: number) => {
     try {
       if (!token) {
         throw new Error("Token não informado");

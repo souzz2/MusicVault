@@ -28,17 +28,10 @@ class musicData {
             }
         });
         this.updateMusics = (id, updates) => __awaiter(this, void 0, void 0, function* () {
-            console.log(`Atualizando música com id: ${id} com os dados: ${JSON.stringify(updates)}`);
             try {
                 yield (0, connection_1.default)("musics").where("idmusic", id).update(updates);
             }
             catch (error) {
-                if (error instanceof Error) {
-                    console.error(`Erro ao atualizar música no banco de dados: ${error.message}`);
-                }
-                else {
-                    console.error("Erro ao atualizar música no banco de dados: erro desconhecido.");
-                }
                 throw new Error("Erro ao atualizar música no banco de dados.");
             }
         });
@@ -57,12 +50,6 @@ class musicData {
                 });
             }
             catch (error) {
-                if (error instanceof Error) {
-                    console.error("Erro ao inserir música:", error.message);
-                }
-                else {
-                    console.error("Erro ao inserir música:", error);
-                }
                 throw new Error("Erro ao adicionar música no banco de dados.");
             }
         });
@@ -78,17 +65,19 @@ class musicData {
             }
         });
         this.searchMusicByName = (name) => __awaiter(this, void 0, void 0, function* () {
-            console.log(`Buscando músicas com o nome: ${name}`);
             try {
-                return yield (0, connection_1.default)("musics").where("namemusic", "ilike", `%${name}%`);
+                return yield (0, connection_1.default)("musics").where("namemusic", "like", `%${name}%`);
             }
             catch (sql) {
                 throw sql;
             }
         });
-        this.getMusics = () => __awaiter(this, void 0, void 0, function* () {
+        this.getMusics = (limit, offset) => __awaiter(this, void 0, void 0, function* () {
             try {
-                return yield (0, connection_1.default)("musics").orderBy("idmusic", "asc").limit(10);
+                return yield (0, connection_1.default)("musics")
+                    .orderBy("idmusic", "asc")
+                    .limit(limit)
+                    .offset(offset);
             }
             catch (sql) {
                 throw sql;

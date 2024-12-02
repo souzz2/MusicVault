@@ -15,13 +15,13 @@ const idGenerator_1 = require("../services/idGenerator");
 class artistBusiness {
     constructor() {
         this.artistData = new dataArtists_1.artistData();
-        this.addArtist = (nameartist, bio, countryartist, ageartist, token) => __awaiter(this, void 0, void 0, function* () {
+        this.addArtist = (nameartist, bio, countryartist, datebirthartist, token) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
                     throw new Error("Token não informado");
                 }
-                const idmusic = (0, idGenerator_1.generatedId)();
-                yield this.artistData.addArtist(nameartist, bio, countryartist, ageartist);
+                const idartist = (0, idGenerator_1.generatedId)();
+                yield this.artistData.addArtist(idartist, nameartist, bio, countryartist, datebirthartist);
             }
             catch (error) {
                 throw new Error(error.message || "Erro ao adicionar o artista.");

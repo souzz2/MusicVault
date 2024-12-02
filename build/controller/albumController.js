@@ -37,17 +37,17 @@ class AlbumController {
             try {
                 const { id } = req.params;
                 const { namealbum, releasealbum, idartist } = req.body;
-                if (!id) {
-                    throw new Error("O ID do álbum é obrigatório.");
-                }
                 const token = req.headers.authorization;
-                yield this.albumBusiness.updateAlbum(id, namealbum, releasealbum, idartist, token);
-                res.status(200).json({ message: "Álbum atualizado com sucesso!" });
+                if (!token) {
+                    throw new Error("Token de autorização não fornecido.");
+                }
+                yield this.albumBusiness.updateAlbum(id, token, namealbum, releasealbum, idartist);
+                res.status(200).send({
+                    message: `Álbum com ID ${id} atualizado com sucesso.`,
+                });
             }
             catch (error) {
-                res
-                    .status(500)
-                    .json({ message: error.message || "Erro ao atualizar álbum", error });
+                res.status(400).send({ error: error.message });
             }
         });
         this.deleteAlbum = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -66,19 +66,6 @@ class AlbumController {
                 res
                     .status(500)
                     .json({ message: error.message || "Erro ao deletar álbum", error });
-            }
-        });
-        this.getAlbumsMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { id } = req.params;
-                const token = req.headers.authorization;
-                const musics = yield this.albumBusiness.getAlbumsMusic(id, token);
-                res.status(200).send({ musics });
-            }
-            catch (error) {
-                res
-                    .status(500)
-                    .json({ message: error.message || "Erro ao buscar o álbum", error });
             }
         });
         this.searchAlbumsByName = (req, res) => __awaiter(this, void 0, void 0, function* () {

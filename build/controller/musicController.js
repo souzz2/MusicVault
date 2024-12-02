@@ -53,20 +53,36 @@ class musicController {
                     .json({ message: "Erro ao atualizar música.", error: error.message });
             }
         });
-        this.postMusics = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.postMusic = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { namemusic, genremusic, duration } = req.body;
+                if (!namemusic || !genremusic || !duration) {
+                    throw new Error("Os parâmetros de busca não foram preenchidos corretamente.");
+                }
+                const token = req.headers.authorization;
+                yield this.musicBusiness.addMusic(namemusic, genremusic, duration, token);
+                res.status(200).json(`Música ${namemusic} adicionada com sucesso!`);
+            }
+            catch (error) {
+                res
+                    .status(500)
+                    .json({ message: "Erro ao adicionar música", error: error.message });
+            }
+        });
+        this.postMusicsWithAlbums = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { namemusic, genremusic, duration, idalbum } = req.body;
                 if (!namemusic || !genremusic || !duration || !idalbum) {
                     throw new Error("Os parâmetros de busca não foram preenchidos corretamente.");
                 }
-                console.log("Dados recebidos:", { namemusic, genremusic, duration, idalbum });
                 const token = req.headers.authorization;
-                yield this.musicBusiness.addMusics(namemusic, genremusic, duration, idalbum, token);
+                yield this.musicBusiness.addMusicsWithAlbuns(namemusic, genremusic, duration, idalbum, token);
                 res.status(200).json(`Música ${namemusic} adicionada com sucesso!`);
             }
             catch (error) {
-                console.error("Erro ao adicionar música:", error.message);
-                res.status(500).json({ message: "Erro ao adicionar música", error: error.message });
+                res
+                    .status(500)
+                    .json({ message: "Erro ao adicionar música", error: error.message });
             }
         });
         this.getMusicsById = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -108,7 +124,10 @@ class musicController {
         this.getMusics = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const token = req.headers.authorization;
-                const musics = yield this.musicBusiness.getMusics(token);
+                const limit = parseInt(req.query.limit) || 10;
+                const page = parseInt(req.query.page) || 1;
+                const offset = (page - 1) * limit;
+                const musics = yield this.musicBusiness.getMusics(token, limit, offset);
                 if (!musics.length) {
                     throw new Error("Não há músicas disponíveis no momento.");
                 }
@@ -123,6 +142,3 @@ class musicController {
     }
 }
 exports.musicController = musicController;
-function generatedId() {
-    throw new Error("Function not implemented.");
-}

@@ -30,7 +30,7 @@ class UserController {
                     return;
                 }
                 const token = yield this.UserBusiness.signupUser({ nickname, emailuser, password });
-                res.status(201).send(token);
+                res.status(201).json(token);
             }
             catch (error) {
                 res.status(400).json({

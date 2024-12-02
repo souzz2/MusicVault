@@ -14,22 +14,6 @@ const artistBusiness_1 = require("../business/artistBusiness");
 class artistController {
     constructor() {
         this.artistBusiness = new artistBusiness_1.artistBusiness();
-        this.postArtist = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                const { nameartist, bio, countryartist, ageartist } = req.body;
-                if (!nameartist || !bio || !countryartist || !ageartist) {
-                    throw new Error("Os parâmetros de busca não foram preenchidos corretamente.");
-                }
-                const token = req.headers.authorization;
-                yield this.artistBusiness.addArtist(nameartist, bio, countryartist, ageartist, token);
-                res.status(200).json(`Artista ${nameartist} adicionado com sucesso!`);
-            }
-            catch (error) {
-                res
-                    .status(500)
-                    .json({ message: "Erro ao adicionar o artista", error: error.message });
-            }
-        });
         this.deleteArtist = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
@@ -46,6 +30,22 @@ class artistController {
                 res
                     .status(500)
                     .json({ message: "Erro ao deletar o artista.", error: error.message });
+            }
+        });
+        this.postArtist = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { nameartist, bio, countryartist, datebirthartist } = req.body;
+                if (!nameartist || !bio || !countryartist || !datebirthartist) {
+                    throw new Error("Os parâmetros de busca não foram preenchidos corretamente.");
+                }
+                const token = req.headers.authorization;
+                yield this.artistBusiness.addArtist(nameartist, bio, countryartist, datebirthartist, token);
+                res.status(200).json(`Artista ${nameartist} adicionado com sucesso!`);
+            }
+            catch (error) {
+                res
+                    .status(500)
+                    .json({ message: "Erro ao adicionar o artista", error: error.message });
             }
         });
         this.searchArtistsByName = (req, res) => __awaiter(this, void 0, void 0, function* () {

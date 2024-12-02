@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AlbumBusiness = void 0;
-const dataAlbuns_1 = require("../data/dataAlbuns");
+const dataAlbums_1 = require("../data/dataAlbums");
 const idGenerator_1 = require("../services/idGenerator");
 const musicBusiness_1 = require("./musicBusiness");
 class AlbumBusiness {
     constructor() {
-        this.albumData = new dataAlbuns_1.albumData();
-        this.musicData = new musicBusiness_1.musicBusiness();
+        this.albumData = new dataAlbums_1.albumData();
+        this.musicBusiness = new musicBusiness_1.musicBusiness();
         this.addAlbumWithMusics = (namealbum, releasealbum, idartist, musics, token) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!token) {
@@ -26,19 +26,12 @@ class AlbumBusiness {
                     throw new Error("Os parâmetros do álbum ou das músicas não foram preenchidos corretamente.");
                 }
                 const idalbum = (0, idGenerator_1.generatedId)();
-                yield this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist, [token]);
+                yield this.albumData.addAlbum(idalbum, namealbum, releasealbum, idartist);
                 yield Promise.all(musics.map((music) => __awaiter(this, void 0, void 0, function* () {
-                    console.log(`Procurando música: ${music.namemusic}`);
-                    const existingMusic = yield this.musicData.searchMusicByName(music.namemusic, token);
+                    const existingMusic = yield this.musicBusiness.searchMusicByName(music.namemusic, token);
                     if (!existingMusic || existingMusic.length === 0) {
-                        console.log(`Música não encontrada. Adicionando: ${music.namemusic}`);
-                        const idmusic = (0, idGenerator_1.generatedId)();
-                        yield this.musicData.addMusics(idmusic, music.namemusic, music.genremusic, music.duration, idalbum);
-                        console.log(`Música "${music.namemusic}" adicionada com sucesso com id ${idmusic}.`);
-                    }
-                    else {
-                        console.log(`Música "${music.namemusic}" encontrada. Atualizando associação com o álbum.`);
-                        yield this.musicData.updateMusic(existingMusic[0].idmusic, token, {
+                        yield this.musicBusiness.addMusicsWithAlbuns(music.namemusic, music.genremusic, music.duration, idalbum, token);
+                        yield this.musicBusiness.updateMusic(existingMusic[0].idmusic, token, {
                             idalbum,
                         });
                     }
@@ -46,7 +39,6 @@ class AlbumBusiness {
                 return `Álbum "${namealbum}" adicionado com sucesso com as músicas associadas.`;
             }
             catch (error) {
-                console.error("Erro ao adicionar álbum e músicas:", error.message);
                 throw new Error(error.message || "Erro ao adicionar o álbum e as músicas.");
             }
         });
@@ -83,24 +75,6 @@ class AlbumBusiness {
             }
             catch (error) {
                 throw new Error(error.message || "Erro ao deletar álbum");
-            }
-        });
-        this.getAlbumsMusic = (id, token) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                if (!token) {
-                    throw new Error("Token não informado");
-                }
-                if (!id) {
-                    throw new Error("É necessário preencher o parâmetro id");
-                }
-                const AlbunsMusics = yield this.albumData.getAlbumsMusicData(id);
-                if (!AlbunsMusics || AlbunsMusics.length === 0) {
-                    throw new Error("Álbum não encontrado");
-                }
-                return AlbunsMusics;
-            }
-            catch (error) {
-                throw new Error("Erro ao buscar as músicas do álbum");
             }
         });
         this.searchAlbumsByName = (name, token) => __awaiter(this, void 0, void 0, function* () {

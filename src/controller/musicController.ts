@@ -56,12 +56,7 @@ export class musicController {
         );
       }
       const token = req.headers.authorization as string;
-      await this.musicBusiness.addMusic(
-        namemusic,
-        genremusic,
-        duration,
-        token
-      );
+      await this.musicBusiness.addMusic(namemusic, genremusic, duration, token);
       res.status(200).json(`Música ${namemusic} adicionada com sucesso!`);
     } catch (error: any) {
       res
@@ -115,18 +110,23 @@ export class musicController {
 
   searchMusicByName = async (req: Request, res: Response) => {
     try {
+      console.log("Iniciando busca por música...");
       const name = req.query.name?.toString().toLowerCase();
+      console.log("Nome da música:", name);
       if (!name) {
         throw new Error('O parâmetro de busca "name" é obrigatório.');
       }
       const token = req.headers.authorization as string;
+      console.log("Token:", token);
       const musics = await this.musicBusiness.searchMusicByName(name, token);
+      console.log("Resultado da busca:", musics);
       if (!musics || musics.length === 0) {
         throw new Error("Nenhuma música foi encontrada.");
       }
 
       res.status(200).json({ musics });
     } catch (error: any) {
+      console.error("Erro ao buscar música:", error.message);
       res
         .status(500)
         .json({ message: "Erro ao buscar música", error: error.message });
@@ -152,4 +152,3 @@ export class musicController {
     }
   };
 }
-
